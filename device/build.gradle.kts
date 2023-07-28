@@ -3,11 +3,12 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
 }
-group = ("com.github.Helios030")
 
-val GROUP_ID = "com.github.bqliang"
-val ARTIFACT_ID = "jitpack-lib-sample"
-val VERSION = latestGitTag().ifEmpty { "1.0.0-SNAPSHOT" }
+
+
+val GROUP_ID = "com.github.Helios030"
+val ARTIFACT_ID = "DeviceInfo"
+val VERSION = latestGitTag().ifEmpty { "1.0.0" }
 
 
 fun latestGitTag(): String {
