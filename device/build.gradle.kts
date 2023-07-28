@@ -2,6 +2,8 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
 }
+group=("com.github.Helios030")
+
 
 android {
     namespace = "com.qc.device"
