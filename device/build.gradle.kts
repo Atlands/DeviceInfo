@@ -5,6 +5,18 @@ plugins {
 }
 group = ("com.github.Helios030")
 
+val GROUP_ID = "com.github.bqliang"
+val ARTIFACT_ID = "jitpack-lib-sample"
+val VERSION = latestGitTag().ifEmpty { "1.0.0-SNAPSHOT" }
+
+
+fun latestGitTag(): String {
+    val process = ProcessBuilder("git", "describe", "--tags", "--abbrev=0").start()
+    return  process.inputStream.bufferedReader().use {bufferedReader ->
+        bufferedReader.readText().trim()
+    }
+}
+
 // 创建一个task来发布源码
 tasks.register<Jar>("sourcesJar") {
     archiveClassifier.set("sources")
@@ -19,29 +31,29 @@ android {
         minSdk = 24
     }
 
+    val GROUP_ID = "com.github.bqliang"
+    val ARTIFACT_ID = "jitpack-lib-sample"
+    val VERSION = latestGitTag().ifEmpty { "1.0.0-SNAPSHOT" }
+
+    fun latestGitTag(): String {
+        val process = ProcessBuilder("git", "describe", "--tags", "--abbrev=0").start()
+        return  process.inputStream.bufferedReader().use {bufferedReader ->
+            bufferedReader.readText().trim()
+        }
+    }
+
     afterEvaluate {
         publishing {
-            repositories {
-                maven {
-                    // isAllowInsecureProtocol = true // 如果Maven仓库仅支持http协议, 请打开此注释
-                    url = uri("https://github.com/Helios030/DeviceInfo.git") // 请填入你的仓库地址
-                    authentication {
-                        create<BasicAuthentication>("basic")
-                    }
-                    credentials {
-                        username = "Helios030" // 请填入你的用户名
-                        password = "Nb1300454585" // 请填入你的密码
-                    }
-                }
-            }
-
             publications {
-                create<MavenPublication>("product") {
-                    from(components["release"])
-                    groupId = "DeviceInfo" // 请填入你的组件名
-                    artifactId = "DeviceInfo" // 请填入你的工件名
-                    version = "v1.0.0" // 请填入工件的版本名
-                    artifact(tasks["sourcesJar"]) // 打包源码到工件中
+                register<MavenPublication>("release") { // 注册一个名字为 release 的发布内容
+                    groupId = GROUP_ID
+                    artifactId = ARTIFACT_ID
+                    version = VERSION
+
+                    afterEvaluate { // 在所有的配置都完成之后执行
+                        // 从当前 module 的 release 包中发布
+                        from(components["release"])
+                    }
                 }
             }
         }
