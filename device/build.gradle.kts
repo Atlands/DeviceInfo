@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("maven-publish")
 }
-group=("com.github.Helios030")
+group = ("com.github.Helios030")
 
 // 创建一个task来发布源码
 tasks.register<Jar>("sourcesJar") {
@@ -15,7 +15,7 @@ tasks.register<Jar>("sourcesJar") {
 android {
     namespace = "com.qc.device"
     compileSdk = 33
-    defaultConfig{
+    defaultConfig {
         minSdk = 24
     }
 
@@ -63,16 +63,21 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
 }
 
 
 
 dependencies {
-    implementation ("androidx.core:core-ktx:1.10.1")
-    implementation ("androidx.appcompat:appcompat:1.6.1")
-    implementation ("com.google.android.material:material:1.9.0")
-    implementation ("com.android.installreferrer:installreferrer:2.2")
-    implementation ("androidx.exifinterface:exifinterface:1.3.6")
+    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.android.installreferrer:installreferrer:2.2")
+    implementation("androidx.exifinterface:exifinterface:1.3.6")
     api("com.google.code.gson:gson:2.10.1")
     implementation("com.google.android.gms:play-services-ads-identifier:18.0.1")
 
