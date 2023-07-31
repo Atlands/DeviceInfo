@@ -16,7 +16,7 @@ import com.qc.device.utils.device.getDeviceInfo
 import com.qc.device.utils.device.getFiles
 import com.qc.device.utils.device.getLocale
 import com.qc.device.utils.device.getNetwork
-import com.qc.device.utils.device.getSIM
+import com.qc.device.utils.device.getSimList
 import com.qc.device.utils.device.getScreen
 import com.qc.device.utils.device.getSensorList
 import com.qc.device.utils.device.getSpace
@@ -39,7 +39,8 @@ class DeviceUtil(val activity: ComponentActivity) {
         this.onResult = onResult
         val keys = mutableListOf(
             Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.READ_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE,
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             keys.add(Manifest.permission.READ_MEDIA_IMAGES)
@@ -64,11 +65,24 @@ class DeviceUtil(val activity: ComponentActivity) {
 
     private fun device(): Device {
         if (device != null) return device!!
+        val simList = getSimList()
         device = Device(
             batter = getBatter(),
             cpu = getCPU(),
             createdAt = Date().time,
-            device = getDeviceInfo(),
+            device = getDeviceInfo().apply {
+                simList.forEach { sim ->
+                    if (imei.isNullOrBlank() && !sim.imei.isNullOrBlank()) {
+                        imei = sim.imei
+                    }
+                    if (imsi.isNullOrBlank() && !sim.imei.isNullOrBlank()) {
+                        imsi = sim.imsi
+                    }
+                    if (meid.isNullOrBlank() && !sim.meid.isNullOrBlank()) {
+                        meid = sim.meid
+                    }
+                }
+            },
             file = getFiles(),
             isTable = false,
             locale = getLocale(),
@@ -78,13 +92,12 @@ class DeviceUtil(val activity: ComponentActivity) {
             wifiList = getWifiList(false),
             screen = getScreen(),
             sensorList = getSensorList(),
-            sim = getSIM(),
+            sim = simList,
             space = getSpace(),
         )
         return device!!
     }
 
-    @RequiresApi(Build.VERSION_CODES.CUPCAKE)
     @SuppressLint("HardwareIds")
     fun getAndroidID(): String =
         try {

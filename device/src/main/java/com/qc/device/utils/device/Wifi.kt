@@ -4,7 +4,6 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import androidx.core.content.ContextCompat
 import com.qc.device.model.Device

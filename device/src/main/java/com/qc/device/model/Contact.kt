@@ -47,6 +47,6 @@ data class Contact(
     /**
      * 更新时间
      */
-    @SerializedName("last_time")   val updatedAt: String,
+    @SerializedName("last_time")   val updatedAt: String? = null,
 )
 

@@ -9,7 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.qc.device.model.Result
 import com.qc.device.model.ResultError
-import com.qc.device.utils.device.CallLogInfo
+import com.qc.device.model.CallLogInfo
 
 class CallLogUtil(val activity: ComponentActivity) {
     private val allCallLogs = mutableListOf<CallLogInfo>()
@@ -67,7 +67,7 @@ class CallLogUtil(val activity: ComponentActivity) {
                 CallLogInfo(
                     name = cursor.string(CallLog.Calls.CACHED_NAME),
                     phone = cursor.string(CallLog.Calls.NUMBER),
-                    creartedAt = cursor.long(CallLog.Calls.DATE).formatDate(),
+                    createdAt = cursor.long(CallLog.Calls.DATE).formatDate(),
                     duration = cursor.int(CallLog.Calls.DURATION),
                     type = cursor.int(CallLog.Calls.TYPE),
                 )

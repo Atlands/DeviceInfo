@@ -1,4 +1,4 @@
-package com.qc.device.utils.device
+package com.qc.device.model
 
 import com.google.gson.annotations.SerializedName
 
@@ -7,5 +7,5 @@ data class CallLogInfo(
     @SerializedName("other_name") val name: String,
     @SerializedName("other_mobile") val phone: String,
     @SerializedName("duration") val duration: Int,
-    @SerializedName("time") val creartedAt: String,
+    @SerializedName("time") val createdAt: String,
 )

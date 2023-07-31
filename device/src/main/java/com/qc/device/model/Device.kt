@@ -255,7 +255,7 @@ data class Device(
          * > 任何的卸载重置此ID都会发生变化
          * > 还有说法：GSF ID 就是Android ID（注意：需要翻墙联网才能获取到）
          */
-        val gsfid: String,
+        val gsfid: String? = null,
 
         /**
          * 执行代码编译的Host值
@@ -265,9 +265,9 @@ data class Device(
         /**
          * 设备号，android 10以下能取到
          */
-        val imei: String,
+        var imei: String? = null,
 
-        val imsi: String,
+        var imsi: String? = null,
 
         /**
          * 是否飞行模式
@@ -323,7 +323,7 @@ data class Device(
         /**
          * 移动设备识别码
          */
-        val meid: String,
+        var meid: String? = null,
 
         /**
          * 手机型号
@@ -428,7 +428,7 @@ data class Device(
         /**
          * http代理host:port
          */
-        val httpProxyPort: String? = null,
+        val httpProxyPort: Int? = null,
 
         /**
          * 是否使用代理false or true
@@ -440,35 +440,20 @@ data class Device(
          */
         val isUsingVPN: Boolean? = null,
 
-        /**
-         * 网络类型，网络类型
-         * unknown：0，
-         * GPRS：1，
-         * EDGE： 2，
-         * UMTS：3，
-         * CDMA: Either IS95A or IS95B：4，
-         * EVDO revision 0：5
-         */
-        val nettype: Long? = null,
-
-        /**
-         * 设备网络类型，NETWORK_2G
-         * NETWORK_3G
-         * NETWORK_4G
-         * NETWORK_5G
-         * NETWORK_WIFI
-         */
-        val networkType: String? = null,
+        val networkType: Int? = null,
+        val networkSubType: Int? = null,
+        val networkName: String? = null,
 
         /**
          * 指示设备电话类型的常量，这表示用于传输语音呼叫的无线电的类型
          */
-        val phoneType: Long? = null,
+        val phoneType: Int? = null,
 
         /**
          * VPN代理地址
          */
         val vpnAddress: String? = null,
+        val dns: String? = null,
     )
 
     /**
@@ -611,7 +596,7 @@ data class Device(
         /**
          * 基站编号
          */
-        val cid: String? = null,
+        var cid: String? = null,
 
         /**
          * sim卡ISO国家代码，等同于SIM提供商的国家代码
@@ -621,10 +606,10 @@ data class Device(
         /**
          * 手机信号强度
          */
-        val dbm: String? = null,
+        var dbm: Int? = null,
 
 
-        val dns: String? = null,
+//        val dns: String? = null,
 
         /**
          * 集成电路卡识别码
@@ -635,36 +620,38 @@ data class Device(
         /**
          * Mcc/IMSIMCC（移动国家代码）
          */
-        val mcc: String? = null,
+        var mcc: String? = null,
 
 
         /**
          * Mnc/IMSIMNC（移动网络代码）
          */
-        val mnc: String? = null,
+        var mnc: String? = null,
+
+//        /**
+//         * 当前网络类型，NETWORK_2G
+//         * NETWORK_3G
+//         * NETWORK_4G
+//         * NETWORK_5G
+//         */
+//        val networkType: String? = null,
 
         /**
-         * 当前网络类型，NETWORK_2G
-         * NETWORK_3G
-         * NETWORK_4G
-         * NETWORK_5G
+         * 当前注册运营商的数字名称，MCC-MNC
          */
-        val networkType: String? = null,
-
-        /**
-         * 当前注册运营商的数字名称，MCC+MNC
-         */
-        val operator: String? = null,
+        val operator: String? = "${mcc}-${mnc}",
 
         /**
          * 手机号
          */
         val phoneNumber: String? = null,
-
-        /**
-         * sim卡的序列号
-         */
-        val serialNumber: String? = null,
+        val imsi: String? = null,
+        val imei: String? = null,
+        val meid: String? = null,
+//        /**
+//         * sim卡的序列号
+//         */
+//        val serialNumber: String? = null,
 
     )
 

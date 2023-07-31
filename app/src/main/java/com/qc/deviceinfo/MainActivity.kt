@@ -18,18 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.qc.device.DataCenter
 import com.qc.deviceinfo.ui.theme.DeviceInfoTheme
 
 class MainActivity : ComponentActivity() {
 
     private val TAG = "MainActivity"
-
+    var dataCenter = DataCenter(this)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
-        var dataCenter = DataCenter(this);
+
 
 
         setContent {
@@ -59,7 +61,8 @@ class MainActivity : ComponentActivity() {
 
                         TextButton("获取设备信息") {
                             dataCenter.getDevice {
-                                Log.d(TAG, "onCreate: $it")
+                                val toJson = Gson().toJson(it)
+                                Log.d(TAG, "onCreate: $toJson")
                             }
                         }
 

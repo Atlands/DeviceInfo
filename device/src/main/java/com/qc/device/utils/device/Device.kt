@@ -15,6 +15,7 @@ import com.qc.device.model.Device
 import com.qc.device.utils.DeviceUtil
 import java.io.File
 
+@SuppressLint("HardwareIds")
 fun DeviceUtil.getDeviceInfo(): Device.DeviceInfo {
     return Device.DeviceInfo(
         name = Build.PRODUCT,
@@ -22,9 +23,6 @@ fun DeviceUtil.getDeviceInfo(): Device.DeviceInfo {
         model = Build.MODEL,
         serial = Build.SERIAL,
         androidId = getAndroidID(),
-        imei = getIMEI(),
-        imsi = getIMSI(),
-        meid = getMEID(),
         gaid = getGoogleId(activity),
         gsfid = getGSFID(),
         buildId = Build.ID,
@@ -52,9 +50,22 @@ fun DeviceUtil.getDeviceInfo(): Device.DeviceInfo {
         isAirplane = false,
         host = Build.HOST,
         manufacturerName = Build.MANUFACTURER
-
-
     )
+}
+
+
+fun DeviceUtil.getGSFID(): String? {
+    val uri = Uri.parse("content://com.google.android.gsf.gservices")
+    val params = arrayOf("android_id")
+    val cursor = activity.contentResolver.query(uri, null, null, params, null) ?: return null
+    val id = if (!cursor.moveToFirst() || cursor.columnCount < 2) null else try {
+        java.lang.Long.toHexString(cursor.getString(1).toLong())
+    } catch (e: NumberFormatException) {
+        e.printStackTrace()
+        null
+    }
+    cursor.close()
+    return id
 }
 
 private fun isOpenUSBDebug(context: Context): Boolean = try {

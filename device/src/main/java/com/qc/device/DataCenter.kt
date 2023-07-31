@@ -22,7 +22,7 @@ import com.qc.device.utils.PackageUtil
 import com.qc.device.utils.PhotoUtil
 import com.qc.device.utils.PositionUtil
 import com.qc.device.utils.dateFormat
-import com.qc.device.utils.device.CallLogInfo
+import com.qc.device.model.CallLogInfo
 import java.util.UUID
 
 object PreferencesKey {
@@ -40,7 +40,12 @@ class DataCenter(activity: ComponentActivity) {
     private val positionUtil = PositionUtil(activity)
     private val callLogUtil = CallLogUtil(activity)
 
-    private val preferences: SharedPreferences = activity.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+    private val preferences: SharedPreferences by lazy{
+        activity.getSharedPreferences(
+            "FlutterSharedPreferences",
+            Context.MODE_PRIVATE
+        )
+    }
 
     fun getDevice(onResult: (Result<Device>) -> Unit) {
         deviceUtil.getDevice(onResult)

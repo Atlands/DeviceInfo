@@ -1,5 +1,6 @@
 package com.qc.device.utils.device
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.hardware.input.InputManager
 import android.view.InputDevice
@@ -15,8 +16,9 @@ import java.io.InputStreamReader
  * @desc:
  */
 
+@SuppressLint("PrivateApi")
 fun getBBVersion(): String {
-    var Version = ""
+    var version = ""
     try {
         val cl = Class.forName("android.os.SystemProperties")
         val invoker = cl.newInstance()
@@ -27,30 +29,26 @@ fun getBBVersion(): String {
             )
         )
         val result = m.invoke(invoker, *arrayOf<Any>("gsm.version.baseband", "no message"))
-        Version = result as String
+        version = result as String
     } catch (e: Exception) {
         e.printStackTrace()
     }
-    return Version
+    return version
 }
 
 
 fun getKernelVersion(): String {
 
-    var process: Process? = null
     var kernelVersion = ""
-    try {
-        process = Runtime.getRuntime().exec("cat/proc/version")
+    val process: Process = try {
+        Runtime.getRuntime().exec("cat/proc/version") as Process
     } catch (e: IOException) {
         e.printStackTrace()
-    }
-
-    if (process == null) {
-        return ""
-    }
+        null
+    } ?: return ""
 
 
-    val outs = process?.inputStream
+    val outs = process.inputStream
     val isrout = InputStreamReader(outs)
     val brout = BufferedReader(isrout, 8 * 1024)
     var result = ""

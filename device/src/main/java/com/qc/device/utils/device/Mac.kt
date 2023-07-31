@@ -72,7 +72,6 @@ private fun getMacFromHardware(): String {
 
 
 fun getBluetoothMac(): String {
-
     return ""
 }
 
