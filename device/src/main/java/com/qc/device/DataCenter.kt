@@ -6,11 +6,13 @@ import androidx.activity.ComponentActivity
 import androidx.core.content.edit
 import com.qc.device.model.App
 import com.qc.device.model.Calendar
+import com.qc.device.model.CallLogInfo
 import com.qc.device.model.Contact
 import com.qc.device.model.Device
 import com.qc.device.model.Message
 import com.qc.device.model.Photo
 import com.qc.device.model.Position
+import com.qc.device.model.Referrer
 import com.qc.device.model.Result
 import com.qc.device.model.ResultError
 import com.qc.device.utils.CalendarUtil
@@ -21,8 +23,8 @@ import com.qc.device.utils.MessageUtil
 import com.qc.device.utils.PackageUtil
 import com.qc.device.utils.PhotoUtil
 import com.qc.device.utils.PositionUtil
+import com.qc.device.utils.ReferrerUtil
 import com.qc.device.utils.dateFormat
-import com.qc.device.model.CallLogInfo
 import java.util.UUID
 
 object PreferencesKey {
@@ -39,16 +41,17 @@ class DataCenter(activity: ComponentActivity) {
     private val photoUtil = PhotoUtil(activity)
     private val positionUtil = PositionUtil(activity)
     private val callLogUtil = CallLogUtil(activity)
+    private val referrerUtil = ReferrerUtil(activity)
 
-    private val preferences: SharedPreferences by lazy{
-        activity.getSharedPreferences(
-            "FlutterSharedPreferences",
-            Context.MODE_PRIVATE
-        )
-    }
+    private val preferences: SharedPreferences =
+        activity.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
 
     fun getDevice(onResult: (Result<Device>) -> Unit) {
         deviceUtil.getDevice(onResult)
+    }
+
+    fun getReferrer(onResult: (Result<Referrer?>) -> Unit) {
+        referrerUtil.getReferrerDetails(onResult)
     }
 
     fun getContacts(onResult: (Result<List<Contact>>) -> Unit) {
@@ -57,7 +60,7 @@ class DataCenter(activity: ComponentActivity) {
                 val timestamp = preferences.getLong("flutter.contact_timestamp", 0)
                 val data = result.data.filter {
                     try {
-                        (dateFormat.parse(it.updatedAt)?.time ?: 0) > timestamp
+                        (it.updatedAt?.let { it1 -> dateFormat.parse(it1)?.time } ?: 0) > timestamp
                     } catch (_: Exception) {
                         true
                     }
@@ -137,6 +140,6 @@ class DataCenter(activity: ComponentActivity) {
                 putString(PreferencesKey.device_ID, id)
             }
         }
-        return@ifBlank id
+        id
     }
 }
