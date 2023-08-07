@@ -250,9 +250,13 @@ fun DeviceUtil.getDbmList(): List<Int> {
         != PackageManager.PERMISSION_GRANTED
     ) return emptyList()
     val cellInfoList = telephonyManager.allCellInfo ?: return emptyList()
-    return cellInfoList.map {
-        it.cellIdentity.operatorAlphaShort
-        it.cellSignalStrength.dbm
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        cellInfoList.map {
+            it.cellIdentity.operatorAlphaShort
+            it.cellSignalStrength.dbm
+        }
+    } else {
+        emptyList()
     }
 }
 

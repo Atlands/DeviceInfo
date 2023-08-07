@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.qc.device.DataCenter
 import com.qc.deviceinfo.ui.theme.DeviceInfoTheme
 

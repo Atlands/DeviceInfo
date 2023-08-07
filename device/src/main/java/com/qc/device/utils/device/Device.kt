@@ -43,7 +43,7 @@ fun DeviceUtil.getDeviceInfo(): Device.DeviceInfo {
         serial = Build.SERIAL,
         androidId = getAndroidID(),
         gaid = getGoogleId(activity),
-        gsfid = getGSFID(),
+        gsfid = getGSFID()?:"",
         buildId = Build.ID,
         buildNumber = Build.VERSION.SDK_INT,
         buildTime = Build.TIME,
@@ -159,10 +159,7 @@ fun DeviceUtil.getGSFID(): String? {
     val uri = Uri.parse("content://com.google.android.gsf.gservices")
     val params = arrayOf("android_id")
     val cursor = activity.contentResolver.query(uri, null, null, params, null) ?: return ""
-    val id = if (!cursor.moveToFirst() || cursor.columnCount < 2) "" else try {
-        java.lang.Long.toHexString(cursor.getString(1).toLong())
-    } catch (e: NumberFormatException) {
-        e.printStackTrace()
+    val id = if (!cursor.moveToFirst() || cursor.columnCount < 2) {
         ""
     }
     else {
