@@ -44,27 +44,26 @@ fun DeviceUtil.getSimList(): List<Device.Sim> {
         val subscriptionInfo: SubscriptionInfo? = activeSubscriptionInfoList[i]
         simList.add(
             Device.Sim(
-                carrierName = subscriptionInfo?.carrierName?.toString(),
+                carrierName = subscriptionInfo?.carrierName?.toString() ?: "",
                 iccid = subscriptionInfo?.iccId ?: "",
                 countryISO = subscriptionInfo?.countryIso ?: "",
                 phoneNumber = subscriptionInfo?.number ?: "",
-                imsi = subscriptionInfo?.subscriptionId?.toString(),
-                imei = getIMEI(i),
-                meid = getMeid(i)
+                imsi = subscriptionInfo?.subscriptionId?.toString() ?: "",
+                imei = getIMEI(i) ?: "",
+                meid = getMeid(i) ?: ""
             ).apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    mcc = subscriptionInfo?.mccString
-                    mnc = subscriptionInfo?.mncString
+                    mcc = subscriptionInfo?.mccString ?: ""
+                    mnc = subscriptionInfo?.mncString ?: ""
                 } else {
-                    mcc = subscriptionInfo?.mcc?.toString()
-                    mnc = subscriptionInfo?.mnc?.toString()
+                    mcc = subscriptionInfo?.mcc?.toString() ?: ""
+                    mnc = subscriptionInfo?.mnc?.toString() ?: ""
                 }
                 if (dbmList.size > i) try {
                     dbm = dbmList[i]
                 } catch (_: Exception) {
                 }
                 if (i == 0) cid = getCidNumbers()
-                subscriptionInfo?.subscriptionId
             }
         )
     }

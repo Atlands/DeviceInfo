@@ -1,12 +1,9 @@
 package com.qc.device.model
 
-import com.google.gson.annotations.SerializedName
-
-
 data class Result<T>(
-    @SerializedName("code") val code: Int,
-    @SerializedName("message") val message: String? = null,
-    @SerializedName("data") val data: T,
+    val code: Int,
+    val message: String? = null,
+    val data: T,
 )
 
 

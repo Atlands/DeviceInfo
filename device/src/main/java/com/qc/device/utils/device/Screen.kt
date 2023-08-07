@@ -1,9 +1,7 @@
 package com.qc.device.utils.device
 
-import android.content.Context
 import android.content.res.Resources
 import android.provider.Settings
-import android.view.WindowManager
 import com.qc.device.model.Device
 import com.qc.device.utils.DeviceUtil
 
@@ -15,7 +13,7 @@ fun DeviceUtil.getScreen(): Device.Screen {
     return Device.Screen(
         width = displayMetrics.widthPixels,
         height = displayMetrics.heightPixels,
-        resolution = "${displayMetrics.widthPixels}*${displayMetrics.heightPixels}",
+//        resolution = "${displayMetrics.widthPixels}*${displayMetrics.heightPixels}",
         density = displayMetrics.density,
         dpi = displayMetrics.densityDpi,
         brightness = brightness

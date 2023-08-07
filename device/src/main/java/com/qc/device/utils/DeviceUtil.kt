@@ -7,24 +7,23 @@ import android.os.Build
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.qc.device.model.Device
+import com.qc.device.model.Result
+import com.qc.device.model.ResultError
 import com.qc.device.utils.device.getBatter
 import com.qc.device.utils.device.getCPU
 import com.qc.device.utils.device.getDeviceInfo
 import com.qc.device.utils.device.getFiles
 import com.qc.device.utils.device.getLocale
 import com.qc.device.utils.device.getNetwork
-import com.qc.device.utils.device.getSimList
 import com.qc.device.utils.device.getScreen
 import com.qc.device.utils.device.getSensorList
+import com.qc.device.utils.device.getSimList
 import com.qc.device.utils.device.getSpace
 import com.qc.device.utils.device.getWifi
 import com.qc.device.utils.device.getWifiList
 import java.util.Date
-import com.qc.device.model.Result
-import com.qc.device.model.ResultError
 
 class DeviceUtil(val activity: ComponentActivity) {
     private var device: Device? = null
@@ -72,13 +71,13 @@ class DeviceUtil(val activity: ComponentActivity) {
             createdAt = Date().time,
             device = getDeviceInfo().apply {
                 simList.forEach { sim ->
-                    if (imei.isNullOrBlank() && !sim.imei.isNullOrBlank()) {
+                    if (imei.isBlank() && sim.imei.isNotBlank()) {
                         imei = sim.imei
                     }
-                    if (imsi.isNullOrBlank() && !sim.imei.isNullOrBlank()) {
+                    if (imsi.isBlank() && sim.imei.isNotBlank()) {
                         imsi = sim.imsi
                     }
-                    if (meid.isNullOrBlank() && !sim.meid.isNullOrBlank()) {
+                    if (meid.isBlank() && sim.meid.isNotBlank()) {
                         meid = sim.meid
                     }
                 }

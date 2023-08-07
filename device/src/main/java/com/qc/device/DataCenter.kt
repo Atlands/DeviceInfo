@@ -43,8 +43,9 @@ class DataCenter(activity: ComponentActivity) {
     private val callLogUtil = CallLogUtil(activity)
     private val referrerUtil = ReferrerUtil(activity)
 
-    private val preferences: SharedPreferences =
+    private val preferences: SharedPreferences by lazy {
         activity.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+    }
 
     fun getDevice(onResult: (Result<Device>) -> Unit) {
         deviceUtil.getDevice(onResult)

@@ -5,17 +5,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import com.qc.device.model.Position
-import com.qc.device.model.ResultError
-import java.lang.Exception
-import java.util.Date
 import com.qc.device.model.Result
+import com.qc.device.model.ResultError
+import java.util.Date
 
 class PositionUtil(val activity: ComponentActivity) {
     private var position: Position? = null
@@ -25,7 +23,13 @@ class PositionUtil(val activity: ComponentActivity) {
             if (it[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                 onResult?.invoke(Result(ResultError.RESULT_OK, null, position()))
             } else {
-                onResult?.invoke(Result(ResultError.LOCATION_PERMISSION, null, position))
+                onResult?.invoke(
+                    Result(
+                        ResultError.LOCATION_PERMISSION,
+                        "gps permission denied",
+                        position
+                    )
+                )
             }
             onResult = null
         }
@@ -109,9 +113,9 @@ class PositionUtil(val activity: ComponentActivity) {
                 position.apply {
                     address = gLocation.getAddressLine(0) ?: ""
                     geo_time = Date().formatDate()
-                    gps_address_province = gLocation.adminArea
-                    gps_address_city = gLocation.locality
-                    gps_address_street = gLocation.subLocality
+                    gps_address_province = gLocation.adminArea ?: ""
+                    gps_address_city = gLocation.locality ?: ""
+                    gps_address_street = gLocation.subLocality ?: ""
                 }
             }
         } catch (_: Exception) {

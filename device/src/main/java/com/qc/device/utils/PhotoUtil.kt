@@ -2,15 +2,15 @@ package com.qc.device.utils
 
 import android.Manifest
 import android.content.pm.PackageManager
-import androidx.exifinterface.media.ExifInterface
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.exifinterface.media.ExifInterface
 import com.qc.device.model.Photo
-import com.qc.device.model.ResultError
 import com.qc.device.model.Result
+import com.qc.device.model.ResultError
 
 class PhotoUtil(val activity: ComponentActivity) {
     private val allPhotos = mutableListOf<Photo>()
@@ -78,7 +78,7 @@ class PhotoUtil(val activity: ComponentActivity) {
                 ?: 0.0
             else it
         }
-        val longitude = cursor.double(MediaStore.Images.Media.LONGITUDE).let {
+        val longitude: Double = cursor.double(MediaStore.Images.Media.LONGITUDE).let {
             if (it == 0.0) exifInterface?.getAttributeDouble(ExifInterface.TAG_GPS_LONGITUDE, 0.0)
                 ?: 0.0
             else it
@@ -92,21 +92,27 @@ class PhotoUtil(val activity: ComponentActivity) {
                     author = author,
                     createdAt = (cursor.long(MediaStore.Images.Media.DATE_ADDED) * 1000).formatDate(),
                     updatedAt = (cursor.long(MediaStore.Images.Media.DATE_MODIFIED) * 1000).formatDate(),
-                    model = Build.MODEL,
+                    model = Build.MODEL ?: "",
                     latitude = latitude,
                     longitude = longitude,
-                    orientation = exifInterface?.getAttribute(ExifInterface.TAG_ORIENTATION),
-                    resolutionX = exifInterface?.getAttribute(ExifInterface.TAG_X_RESOLUTION),
-                    resolutionY = exifInterface?.getAttribute(ExifInterface.TAG_Y_RESOLUTION),
-                    altitude = exifInterface?.getAttribute(ExifInterface.TAG_GPS_ALTITUDE),
-                    gpsProcessingMethod = exifInterface?.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD),
-                    lensMake = exifInterface?.getAttribute(ExifInterface.TAG_MAKE),
-                    lensModel = exifInterface?.getAttribute(ExifInterface.TAG_MODEL),
-                    focalLength = exifInterface?.getAttribute(ExifInterface.TAG_FOCAL_LENGTH),
-                    flash = exifInterface?.getAttribute(ExifInterface.TAG_FLASH),
-                    software = exifInterface?.getAttribute(ExifInterface.TAG_SOFTWARE),
-                    latitudeRef = exifInterface?.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF),
+                    orientation = exifInterface?.getAttribute(ExifInterface.TAG_ORIENTATION) ?: "",
+                    resolutionX = exifInterface?.getAttribute(ExifInterface.TAG_X_RESOLUTION) ?: "",
+                    resolutionY = exifInterface?.getAttribute(ExifInterface.TAG_Y_RESOLUTION) ?: "",
+                    altitude = exifInterface?.getAttributeDouble(
+                        ExifInterface.TAG_GPS_ALTITUDE,
+                        0.0
+                    ) ?: 0.0,
+                    gpsProcessingMethod = exifInterface?.getAttribute(ExifInterface.TAG_GPS_PROCESSING_METHOD)
+                        ?: "",
+                    lensMake = exifInterface?.getAttribute(ExifInterface.TAG_MAKE) ?: "",
+                    lensModel = exifInterface?.getAttribute(ExifInterface.TAG_MODEL) ?: "",
+                    focalLength = exifInterface?.getAttribute(ExifInterface.TAG_FOCAL_LENGTH) ?: "",
+                    flash = exifInterface?.getAttribute(ExifInterface.TAG_FLASH) ?: "",
+                    software = exifInterface?.getAttribute(ExifInterface.TAG_SOFTWARE) ?: "",
+                    latitudeRef = exifInterface?.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)
+                        ?: "",
                     longitudeRef = exifInterface?.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
+                        ?: "",
                 )
             )
         }

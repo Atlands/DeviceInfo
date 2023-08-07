@@ -49,7 +49,7 @@ class CalendarUtil(val activity: ComponentActivity) {
         while (cursor.moveToNext()){
             allCalendars.add(
                 Calendar(
-                    id = cursor.long(CalendarContract.Events._ID),
+//                    id = cursor.long(CalendarContract.Events._ID),
                     eventTitle = cursor.string(CalendarContract.Events.TITLE),
                     description = cursor.string(CalendarContract.Events.DESCRIPTION),
                     startTime = cursor.long(CalendarContract.Events.DTSTART).formatDate(),

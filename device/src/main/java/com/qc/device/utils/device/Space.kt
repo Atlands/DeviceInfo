@@ -25,14 +25,16 @@ private fun getApp(): Device.AppClass {
     )
 }
 
-private fun getSD(): Device.AppClass? {
-    if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) return null
+private fun getSD(): Device.AppClass {
+    if (!Environment.getExternalStorageState()
+            .equals(Environment.MEDIA_MOUNTED)
+    ) return Device.AppClass()
     val file = Environment.getExternalStorageDirectory()
     val stat = StatFs(file.path)
 //    val blockSize = stat.blockSizeLong
     return Device.AppClass(
-        total =  stat.totalBytes,
-        available =  stat.availableBlocksLong
+        total = stat.totalBytes,
+        available = stat.availableBlocksLong
     )
 }
 
@@ -47,9 +49,10 @@ private fun getStorage(): Device.AppClass {
 }
 
 
-private fun getRam(context: Context): Device.AppClass? {
+private fun getRam(context: Context): Device.AppClass {
     val manager =
-        context.getSystemService(Activity.ACTIVITY_SERVICE) as? ActivityManager ?: return null
+        context.getSystemService(Activity.ACTIVITY_SERVICE) as? ActivityManager
+            ?: return Device.AppClass()
     val info = ActivityManager.MemoryInfo()
     manager.getMemoryInfo(info)
     return Device.AppClass(

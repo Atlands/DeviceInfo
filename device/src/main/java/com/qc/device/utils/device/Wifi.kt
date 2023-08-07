@@ -10,27 +10,25 @@ import com.qc.device.model.Device
 import com.qc.device.utils.DeviceUtil
 
 @SuppressLint("HardwareIds")
-fun DeviceUtil.getWifi(): Device.WifiInfo? {
+fun DeviceUtil.getWifi(): Device.WifiInfo {
 
     if (ContextCompat.checkSelfPermission(
             activity,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
-    ) return null
+    ) return Device.WifiInfo()
 
     val manager =
         activity.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
-            ?: return null
+            ?: return Device.WifiInfo()
 
-    if (manager.wifiState != WifiManager.WIFI_STATE_ENABLED) return null
+    if (manager.wifiState != WifiManager.WIFI_STATE_ENABLED) return Device.WifiInfo()
     val info = manager.connectionInfo
 
     return Device.WifiInfo(
-//        ip = info.ipAddress,
-        ssid = info.ssid,
-        bssid = info.bssid,
-//        capabilities = info.ca
-        macAddress = info.macAddress,
+        ssid = info.ssid ?: "",
+        bssid = info.bssid ?: "",
+        macAddress = info.macAddress ?: "",
         rssi = info.rssi,
         frequency = info.frequency,
     )
@@ -48,16 +46,16 @@ fun DeviceUtil.getWifiList(registered: Boolean): List<Device.WifiInfo> {
             ?: return emptyList()
     return if (registered) manager.configuredNetworks.map {
         Device.WifiInfo(
-            ssid = it.SSID,
-            bssid = it.BSSID
+            ssid = it.SSID ?: "",
+            bssid = it.BSSID ?: ""
         )
     }
     else
         manager.scanResults.map {
             Device.WifiInfo(
-                ssid = it.BSSID,
-                bssid = it.BSSID,
-                capabilities = it.capabilities,
+                ssid = it.BSSID ?: "",
+                bssid = it.BSSID ?: "",
+                capabilities = it.capabilities ?: "",
                 rssi = it.level,
                 frequency = it.frequency,
                 timestamp = it.timestamp

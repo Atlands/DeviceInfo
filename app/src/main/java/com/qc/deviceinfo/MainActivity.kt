@@ -15,11 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import com.qc.device.DataCenter
 import com.qc.deviceinfo.ui.theme.DeviceInfoTheme
 
@@ -43,14 +41,15 @@ class MainActivity : ComponentActivity() {
                 ) {
 
 
-                    Column (horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center){
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
 
 
-                        TextButton("获取设备信息") {
-                            dataCenter.getDevice {
-                                Log.d(TAG, "onCreate: $it")
-                            }
+                        TextButton("获取安装应用列表") {
+                            val apps = Gson().toJson(dataCenter.getApps())
+                            Log.d(TAG, apps)
                         }
 
                         TextButton("获取设备信息") {

@@ -1,18 +1,16 @@
 package com.qc.device.utils.device
 
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import com.qc.device.model.Device
 import com.qc.device.utils.DeviceUtil
-import java.lang.Exception
 
-fun DeviceUtil.getBatter() : Device.Batter? {
-    
+fun DeviceUtil.getBatter(): Device.Batter {
+
     val intent: Intent = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { ifilter ->
         activity.registerReceiver(null, ifilter)
-    } ?: return null
+    } ?: return Device.Batter()
 
     val batteryStatus = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
     val batteryHealth = intent.getIntExtra(BatteryManager.EXTRA_HEALTH, -1)

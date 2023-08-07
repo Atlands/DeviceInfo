@@ -12,9 +12,9 @@ fun DeviceUtil.getSensorList(): List<Device.SensorInfo> {
     return manager.getSensorList(Sensor.TYPE_ALL).map {
         Device.SensorInfo(
             type = it.type,
-            name = it.name,
+            name = it.name ?: "",
             version = it.version,
-            vendor = it.vendor,
+            vendor = it.vendor ?: "",
             maxRange = it.maximumRange,
             minDelay = it.minDelay,
             power = it.power,

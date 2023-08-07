@@ -21,10 +21,10 @@ fun DeviceUtil.getCPU(): Device.CPU {
 //            ?.trim()
     val abis = Build.SUPPORTED_ABIS.toList()
     return Device.CPU(
-        name = cpuName,
+        name = cpuName ?: "",
         cores = cores,
-        frequencyMin = frequencyMin,
-        frequencyMax = frequencyMax,
+        frequencyMin = frequencyMin ?: 0,
+        frequencyMax = frequencyMax ?: 0,
 //        architecture = architecture,
         abis = abis
     )

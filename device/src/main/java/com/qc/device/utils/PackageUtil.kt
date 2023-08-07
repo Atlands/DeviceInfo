@@ -20,7 +20,7 @@ class PackageUtil(private val context: Context) {
         return packages.map {
             val isSystem = (it.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) == 1
             App(
-                name = try {
+                appName = try {
                     it.applicationInfo.loadLabel(manager).toString()
                 } catch (_: Exception) {
                     ""
@@ -32,7 +32,7 @@ class PackageUtil(private val context: Context) {
                 } catch (_: Exception) {
                     0
                 },
-                isSystem = if (isSystem) 1 else 0,
+                isSystem = isSystem,
                 createdAt = it.firstInstallTime,
                 updatedAt = it.lastUpdateTime
             )
@@ -43,13 +43,13 @@ class PackageUtil(private val context: Context) {
         val packageManager = context.packageManager
         val info = packageManager.getPackageInfo(context.packageName, 0)
         return App(
-            name = try {
+            appName = try {
                 context.applicationInfo.loadLabel(packageManager).toString()
             } catch (e: java.lang.Exception) {
                 ""
             },
-            packageName = info.packageName,
-            version = info.versionName,
+            packageName = info.packageName ?: "",
+            version = info.versionName ?: "",
             versionCode = info.versionCode,
         )
     }

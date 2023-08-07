@@ -16,11 +16,11 @@ import java.io.InputStreamReader
 fun DeviceUtil.getNetwork(): Device.Network {
     val networkInfo = getNetworkInfo()
     return Device.Network(
-        dns = getLocalDNS(),
-        networkType = networkInfo?.type,
-        networkSubType = networkInfo?.subtype,
-        networkName = networkInfo?.subtypeName,
-        phoneType = telephonyManager?.phoneType,
+        dns = getLocalDNS() ?: "",
+        networkType = networkInfo?.type ?: 0,
+        networkSubType = networkInfo?.subtype ?: 0,
+        networkName = networkInfo?.subtypeName ?: "",
+        phoneType = telephonyManager?.phoneType ?: 0,
         isUsingVPN = networkInfo?.type == ConnectivityManager.TYPE_VPN,
         httpProxyPort = httpProxyPort(),
         isUsingProxyPort = httpProxyPort() != -1

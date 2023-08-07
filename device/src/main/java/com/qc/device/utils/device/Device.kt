@@ -9,7 +9,6 @@ import android.os.Build.getRadioVersion
 import android.os.SystemClock
 import android.provider.Settings
 import android.telephony.TelephonyManager
-import androidx.annotation.RequiresApi
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.qc.device.model.Device
 import com.qc.device.utils.DeviceUtil
@@ -54,15 +53,15 @@ fun DeviceUtil.getDeviceInfo(): Device.DeviceInfo {
 }
 
 
-fun DeviceUtil.getGSFID(): String? {
+fun DeviceUtil.getGSFID(): String {
     val uri = Uri.parse("content://com.google.android.gsf.gservices")
     val params = arrayOf("android_id")
-    val cursor = activity.contentResolver.query(uri, null, null, params, null) ?: return null
-    val id = if (!cursor.moveToFirst() || cursor.columnCount < 2) null else try {
+    val cursor = activity.contentResolver.query(uri, null, null, params, null) ?: return ""
+    val id = if (!cursor.moveToFirst() || cursor.columnCount < 2) "" else try {
         java.lang.Long.toHexString(cursor.getString(1).toLong())
     } catch (e: NumberFormatException) {
         e.printStackTrace()
-        null
+        ""
     }
     cursor.close()
     return id
