@@ -1,6 +1,7 @@
 package com.qc.device.utils
 
 import android.Manifest
+import android.Manifest.permission.BLUETOOTH_CONNECT
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.Build
@@ -24,6 +25,7 @@ import com.qc.device.utils.device.getSpace
 import com.qc.device.utils.device.getWifi
 import com.qc.device.utils.device.getWifiList
 import java.util.Date
+import com.qc.device.utils.device.isTabletDevice
 
 class DeviceUtil(val activity: ComponentActivity) {
     private var device: Device? = null
@@ -41,6 +43,11 @@ class DeviceUtil(val activity: ComponentActivity) {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            keys.add(Manifest.permission.BLUETOOTH_CONNECT)
+        } else {
+            keys.add(Manifest.permission.BLUETOOTH)
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             keys.add(Manifest.permission.READ_MEDIA_IMAGES)
             keys.add(Manifest.permission.READ_MEDIA_AUDIO)
@@ -83,7 +90,7 @@ class DeviceUtil(val activity: ComponentActivity) {
                 }
             },
             file = getFiles(),
-            isTable = false,
+            isTable = isTabletDevice(),
             locale = getLocale(),
             network = getNetwork(),
             regWifi = getWifi(),

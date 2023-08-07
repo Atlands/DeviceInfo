@@ -240,7 +240,7 @@ fun DeviceUtil.getCidNumbers(): String {
     return ""
 }
 
-@SuppressLint("NewApi")
+
 fun DeviceUtil.getDbmList(): List<Int> {
     val telephonyManager: TelephonyManager = telephonyManager ?: return emptyList()
     if (ActivityCompat.checkSelfPermission(

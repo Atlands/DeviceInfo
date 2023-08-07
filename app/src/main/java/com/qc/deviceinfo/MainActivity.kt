@@ -24,13 +24,16 @@ import com.qc.deviceinfo.ui.theme.DeviceInfoTheme
 class MainActivity : ComponentActivity() {
 
     private val TAG = "MainActivity"
-    var dataCenter = DataCenter(this)
+    lateinit var dataCenter: DataCenter
+    private val gson = GsonBuilder().setPrettyPrinting().create()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-
-
+        dataCenter = DataCenter(this)
+        Log.d(TAG, "MainActivity onCreate")
+        dataCenter.getDevice {
+            Log.d(TAG, gson.toJson(it.data))
+        }
 
         setContent {
             DeviceInfoTheme {

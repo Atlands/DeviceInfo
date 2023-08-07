@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.ContactsContract
 import android.provider.MediaStore
 import androidx.core.content.ContextCompat
+import com.qc.device.R
 import com.qc.device.model.Device
 import com.qc.device.utils.DeviceUtil
 import com.qc.device.utils.string
@@ -28,6 +29,10 @@ fun DeviceUtil.getFiles(): Device.File {
         downloadExternal = getDownloadFile(activity).size,
         contactGroup = getContactGroup(activity)
     )
+}
+
+fun DeviceUtil.isTabletDevice(): Boolean {
+    return this.activity.resources.getBoolean(R.bool.is_tablet_device)
 }
 
 private fun getContactGroup(context: Context): Int {
