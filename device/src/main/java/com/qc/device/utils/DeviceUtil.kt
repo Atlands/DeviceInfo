@@ -3,8 +3,11 @@ package com.qc.device.utils
 import android.Manifest
 import android.Manifest.permission.BLUETOOTH_CONNECT
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application.ActivityLifecycleCallbacks
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,9 +35,40 @@ class DeviceUtil(val activity: ComponentActivity) {
     private var onResult: ((Result<Device>) -> Unit)? = null
     private val permission =
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            this.onResult?.invoke(Result(ResultError.RESULT_OK, null, device()))
-            this.onResult = null
+            success()
         }
+
+    private var openPower: Double = 0.0
+    private var backNum: Int = 0
+
+    init {
+        openPower = getBatter().level
+        activity.application.registerActivityLifecycleCallbacks(object :ActivityLifecycleCallbacks{
+            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                openPower = getBatter().level
+            }
+
+            override fun onActivityStarted(activity: Activity) {
+                openPower = getBatter().level
+            }
+
+            override fun onActivityResumed(activity: Activity) {
+            }
+
+            override fun onActivityPaused(activity: Activity) {
+                backNum++
+            }
+
+            override fun onActivityStopped(activity: Activity) {
+            }
+
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+            }
+
+            override fun onActivityDestroyed(activity: Activity) {
+            }
+        })
+    }
 
     fun getDevice(onResult: (Result<Device>) -> Unit) {
         this.onResult = onResult
@@ -65,7 +99,13 @@ class DeviceUtil(val activity: ComponentActivity) {
             }
         }
 
-        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, device()))
+        success()
+    }
+
+    private fun success(){
+        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, device().apply {
+            backNum = this@DeviceUtil.backNum
+        }))
         this.onResult = null
     }
 
@@ -100,6 +140,8 @@ class DeviceUtil(val activity: ComponentActivity) {
             sensorList = getSensorList(),
             sim = simList,
             space = getSpace(),
+            openPower = openPower,
+            backNum = backNum,
         )
         return device!!
     }

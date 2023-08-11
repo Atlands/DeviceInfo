@@ -32,9 +32,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         dataCenter = DataCenter(this)
         Log.d(TAG, "MainActivity onCreate")
-        dataCenter.getDevice {
-            Log.d(TAG, gson.toJson(it.data))
-        }
 
         setContent {
             DeviceInfoTheme {

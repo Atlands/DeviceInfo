@@ -71,7 +71,16 @@ data class Device(
     /**
      * 扫描环境列表，需要精确GPS定位
      */
-    val wifiList: List<WifiInfo>
+    val wifiList: List<WifiInfo>,
+
+    /**
+     * 打开app电量
+     */
+    val openPower: Double,
+    /**
+     * 返回后台次数
+     */
+    var backNum: Int,
 ) {
 
     /**
