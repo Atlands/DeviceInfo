@@ -29,7 +29,12 @@ import java.util.UUID
 
 object PreferencesKey {
     const val device_ID = "device_id"
-    const val Contact_IDS = "contact_ids"
+    const val Contact_Timestamp = "contact_timestamp"
+    const val Calendar_ID = "calendar_id"
+    const val Sms_Timestamp = "sms_timestamp"
+    const val Photo_Timestamp = "photo_timestamp"
+    const val Call_Timestamp = "call_log_timestamp"
+    const val App_Timestamp = "app_timestamp"
 }
 
 class DataCenter(activity: ComponentActivity) {
@@ -55,13 +60,39 @@ class DataCenter(activity: ComponentActivity) {
         referrerUtil.getReferrerDetails(onResult)
     }
 
+    fun savePreferences(maps: Map<String, Any>) {
+        preferences.edit {
+            maps.forEach { item ->
+                when (item.key) {
+                    "app" ->
+                        putLong(PreferencesKey.App_Timestamp, item.value as Long)
+
+                    "call" ->
+                        putLong(PreferencesKey.Call_Timestamp, item.value as Long)
+
+                    "photo" ->
+                        putLong(PreferencesKey.Photo_Timestamp, item.value as Long)
+
+                    "sms" ->
+                        putLong(PreferencesKey.Sms_Timestamp, item.value as Long)
+
+                    "calendar" ->
+                        putLong(PreferencesKey.Calendar_ID, item.value as Long)
+
+                    "contact" ->
+                        putLong(PreferencesKey.Contact_Timestamp, item.value as Long)
+                }
+            }
+        }
+    }
+
     fun getContacts(onResult: (Result<List<Contact>>) -> Unit) {
         contactUtil.getContacts { result ->
             if (result.code == ResultError.RESULT_OK) {
-                val timestamp = preferences.getLong("flutter.contact_timestamp", 0)
+                val timestamp = preferences.getLong(PreferencesKey.Contact_Timestamp, 0)
                 val data = result.data.filter {
                     try {
-                        (it.updatedAt?.let { it1 -> dateFormat.parse(it1)?.time } ?: 0) > timestamp
+                        (it.updatedAt.let { it1 -> dateFormat.parse(it1)?.time } ?: 0) > timestamp
                     } catch (_: Exception) {
                         true
                     }
@@ -74,26 +105,29 @@ class DataCenter(activity: ComponentActivity) {
     }
 
     fun getCalendars(onResult: (Result<List<Calendar>>) -> Unit) {
-        val id = preferences.getLong("flutter.calendar_id", 0)
+        val id = preferences.getLong(PreferencesKey.Calendar_ID, 0)
         calendarUtil.getCalendars(id, onResult)
     }
 
     fun getMessages(onResult: (Result<List<Message>>) -> Unit) {
         contactUtil.getContacts {
-            val timestamp = preferences.getLong("flutter.sms_timestamp", 0)
+            val timestamp = preferences.getLong(PreferencesKey.Sms_Timestamp, 0)
             messageUtil.getMessages(timestamp, it.data, onResult)
         }
     }
 
-    fun getApps() = packageUtil.allPackages()
+    fun getApps(): List<App> {
+        val timestamp = preferences.getLong(PreferencesKey.App_Timestamp, 0)
+        return packageUtil.allPackages(timestamp)
+    }
 
     fun getPhotos(onResult: (Result<List<Photo>>) -> Unit) {
-        val timestamp = preferences.getLong("flutter.photo_timestamp", 0)
+        val timestamp = preferences.getLong(PreferencesKey.Photo_Timestamp, 0)
         photoUtil.getPhotos(timestamp, onResult)
     }
 
     fun getCallLogs(onResult: (Result<List<CallLogInfo>>) -> Unit) {
-        val timestamp = preferences.getLong("flutter.call_log_timestamp", 0)
+        val timestamp = preferences.getLong(PreferencesKey.Call_Timestamp, 0)
         callLogUtil.getCallLogs(timestamp, onResult)
     }
 

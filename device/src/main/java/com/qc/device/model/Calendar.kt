@@ -3,7 +3,7 @@ package com.qc.device.model
 import com.google.gson.annotations.SerializedName
 
 data class Calendar(
-//    @SerializedName("id") val id: Long,
+    @SerializedName("id") val id: Long = 0,
     @SerializedName("event_title") val eventTitle: String = "",
     @SerializedName("description") val description: String = "",
     @SerializedName("start_time") val startTime: String = "",
