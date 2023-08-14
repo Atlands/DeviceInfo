@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import androidx.activity.ComponentActivity
@@ -16,22 +17,19 @@ import com.qc.device.model.ResultError
 import java.util.Date
 
 class PositionUtil(val activity: ComponentActivity) {
-    private var position: Position? = null
+    private var mLocation: Location? = null
+    private val manager by lazy {
+        activity.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    }
+
     private var onResult: ((Result<Position?>) -> Unit)? = null
     private val permission =
         activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             if (it[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
-                onResult?.invoke(Result(ResultError.RESULT_OK, null, position()))
+                _getPosition()
             } else {
-                onResult?.invoke(
-                    Result(
-                        ResultError.LOCATION_PERMISSION,
-                        "gps permission denied",
-                        position
-                    )
-                )
+                error()
             }
-            onResult = null
         }
 
     fun getPosition(onResult: (Result<Position?>) -> Unit) {
@@ -41,8 +39,7 @@ class PositionUtil(val activity: ComponentActivity) {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            this.onResult?.invoke(Result(ResultError.RESULT_OK, null, position()))
-            this.onResult = null
+            _getPosition()
         } else {
             val keys = arrayOf(
                 Manifest.permission.ACCESS_FINE_LOCATION,
@@ -52,62 +49,66 @@ class PositionUtil(val activity: ComponentActivity) {
         }
     }
 
-    @SuppressLint("MissingPermission")
-    private fun position(): Position? {
-        if (position != null) return position
-        val manager =
-            activity.getSystemService(Context.LOCATION_SERVICE) as? LocationManager ?: return null
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) return null
-        ///gps
-        try {
-            if (ContextCompat.checkSelfPermission(
-                    activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                val location = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-                if (location != null) {
-                    position = decode(location.latitude, location.longitude)
-                    return position
-                }
-                manager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER,
-                    0,
-                    0F,
-                    locationListener
-                )
-            }
-        } catch (_: Exception) {
+    private fun _getPosition(){
+        position(Manifest.permission.ACCESS_FINE_LOCATION, LocationManager.GPS_PROVIDER)
+        if (this.onResult != null) {
+            position(Manifest.permission.ACCESS_COARSE_LOCATION, LocationManager.NETWORK_PROVIDER)
         }
-        //network
-        try {
-            if (ContextCompat.checkSelfPermission(
-                    activity,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                val location = manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-                if (location != null) {
-                    position = decode(location.latitude, location.longitude)
-                    return position
-                }
-                manager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER,
-                    0,
-                    0F,
-                    locationListener
-                )
-            }
-        } catch (_: Exception) {
-        }
-        return null
+        success(null)
     }
 
-    private fun decode(latitude: Double, longitude: Double): Position {
-        val position = Position(latitude = latitude, longitude = longitude)
+    private fun success(position: Position?) {
+        if (onResult == null) return
+        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, position))
+        this.onResult = null
+    }
+
+    private fun error() {
+        if (onResult == null) return
+        onResult?.invoke(
+            Result(
+                ResultError.LOCATION_PERMISSION,
+                "gps permission denied",
+                null
+            )
+        )
+        onResult = null
+    }
+
+
+    private fun position(key: String, provider: String) {
+        if (ContextCompat.checkSelfPermission(
+                activity,
+                key
+            ) != PackageManager.PERMISSION_GRANTED
+        ) return
+        if (!manager.isProviderEnabled(provider)) return
+
+        if (mLocation != null) {
+            geocoder(mLocation!!)
+        } else {
+            try {
+                val location = manager.getLastKnownLocation(provider)
+                if (location == null) {
+                    manager.requestLocationUpdates(provider, 0, 0F, locationListener)
+                } else {
+                    geocoder(location)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun geocoder(location: Location) {
+        this.mLocation = location
+        val position = Position(
+            latitude = location.latitude,
+            longitude = location.longitude
+        )
         try {
             val geocoder = Geocoder(activity)
-            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
             if (!addresses.isNullOrEmpty()) {
                 val gLocation = addresses.first()
                 position.apply {
@@ -120,12 +121,13 @@ class PositionUtil(val activity: ComponentActivity) {
             }
         } catch (_: Exception) {
         }
-        return position
+        success(position)
     }
 
-    private val locationListener = LocationListener {
+
+    private val locationListener = LocationListener { location ->
         try {
-            position = decode(it.latitude, it.longitude)
+            mLocation = location
         } catch (_: Exception) {
         }
     }
