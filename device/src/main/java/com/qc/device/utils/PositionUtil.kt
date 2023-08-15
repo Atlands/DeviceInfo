@@ -49,7 +49,7 @@ class PositionUtil(val activity: ComponentActivity) {
         }
     }
 
-    private fun _getPosition(){
+    private fun _getPosition() {
         position(Manifest.permission.ACCESS_FINE_LOCATION, LocationManager.GPS_PROVIDER)
         if (this.onResult != null) {
             position(Manifest.permission.ACCESS_COARSE_LOCATION, LocationManager.NETWORK_PROVIDER)

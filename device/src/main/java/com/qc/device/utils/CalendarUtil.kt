@@ -14,29 +14,44 @@ class CalendarUtil(val activity: ComponentActivity) {
     private val allCalendars = mutableListOf<Calendar>()
     private var startId = 0L
     private var onResult: ((Result<List<Calendar>>) -> Unit)? = null
-    private val permission = activity.registerForActivityResult(ActivityResultContracts.RequestPermission()){
-        if (it){
-            onResult?.invoke(Result(ResultError.RESULT_OK,null,allCalendars()))
-        }else{
-            onResult?.invoke(Result(ResultError.CALENDAR_PERMISSION,"calendar permission denied",allCalendars))
+    private val permission =
+        activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                success()
+            } else {
+                error()
+            }
         }
-        onResult = null
-    }
 
-    fun getCalendars(id:Long,onResult: (Result<List<Calendar>>) -> Unit){
+    fun getCalendars(id: Long, onResult: (Result<List<Calendar>>) -> Unit) {
         this.startId = id
         this.onResult = onResult
         val key = Manifest.permission.READ_CALENDAR
-        if (ContextCompat.checkSelfPermission(activity,key) == PackageManager.PERMISSION_GRANTED){
-            this.onResult?.invoke(Result(ResultError.RESULT_OK,null,allCalendars()))
-            this.onResult = null
-        }else{
+        if (ContextCompat.checkSelfPermission(activity, key) == PackageManager.PERMISSION_GRANTED) {
+            success()
+        } else {
             permission.launch(key)
         }
     }
 
+    private fun success() {
+        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allCalendars()))
+        this.onResult = null
+    }
 
-    private fun allCalendars():List<Calendar>{
+    private fun error() {
+        onResult?.invoke(
+            Result(
+                ResultError.CALENDAR_PERMISSION,
+                "calendar permission denied",
+                allCalendars
+            )
+        )
+        onResult = null
+    }
+
+
+    private fun allCalendars(): List<Calendar> {
         if (allCalendars.isNotEmpty()) return allCalendars
         val cursor =
             activity.contentResolver.query(
@@ -46,7 +61,7 @@ class CalendarUtil(val activity: ComponentActivity) {
                 null,
                 "${CalendarContract.Events._ID} ASC"
             ) ?: return allCalendars
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             allCalendars.add(
                 Calendar(
                     id = cursor.long(CalendarContract.Events._ID),

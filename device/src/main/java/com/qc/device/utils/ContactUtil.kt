@@ -17,17 +17,10 @@ class ContactUtil(private val activity: ComponentActivity) {
     private val permission =
         activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
-                onResult?.invoke(Result(ResultError.RESULT_OK, null, allContacts()))
+                success()
             } else {
-                onResult?.invoke(
-                    Result(
-                        ResultError.CONTACT_PERMISSION,
-                        "contact permission denied",
-                        emptyList()
-                    )
-                )
+                error()
             }
-            onResult = null
         }
 
     fun getContacts(onResult: (Result<List<Contact>>) -> Unit) {
@@ -37,11 +30,26 @@ class ContactUtil(private val activity: ComponentActivity) {
                 Manifest.permission.READ_CONTACTS
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allContacts()))
-            this.onResult = null
+            success()
         } else {
             permission.launch(Manifest.permission.READ_CONTACTS)
         }
+    }
+
+    private fun error() {
+        onResult?.invoke(
+            Result(
+                ResultError.CONTACT_PERMISSION,
+                "contact permission denied",
+                emptyList()
+            )
+        )
+        onResult = null
+    }
+
+    private fun success() {
+        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allContacts()))
+        this.onResult = null
     }
 
     private fun allContacts(): List<Contact> {
@@ -62,7 +70,8 @@ class ContactUtil(private val activity: ComponentActivity) {
                 familyName = cursor.string(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_SOURCE),
                 giveName = cursor.string(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY),
                 phone = cursor.string(ContactsContract.CommonDataKinds.Phone.NUMBER),
-                updatedAt = cursor.long(ContactsContract.CommonDataKinds.Phone.CONTACT_LAST_UPDATED_TIMESTAMP).formatDate()
+                updatedAt = cursor.long(ContactsContract.CommonDataKinds.Phone.CONTACT_LAST_UPDATED_TIMESTAMP)
+                    .formatDate()
             )
             allContacts.add(contact)
         }

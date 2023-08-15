@@ -20,17 +20,10 @@ class PhotoUtil(val activity: ComponentActivity) {
     private val permission =
         activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
-                onResult?.invoke(Result(ResultError.RESULT_OK, null, allPhotos()))
+                success()
             } else {
-                onResult?.invoke(
-                    Result(
-                        ResultError.STORAGE_PERMISSION,
-                        "storage permission denied",
-                        emptyList()
-                    )
-                )
+                error()
             }
-            onResult = null
         }
 
     fun getPhotos(startTimestamp: Long = 0, onResult: (Result<List<Photo>>) -> Unit) {
@@ -38,15 +31,30 @@ class PhotoUtil(val activity: ComponentActivity) {
         this.onResult = onResult
         val key =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-                Manifest.permission.READ_MEDIA_AUDIO
+                Manifest.permission.READ_MEDIA_IMAGES
             else
                 Manifest.permission.READ_EXTERNAL_STORAGE
         if (ContextCompat.checkSelfPermission(activity, key) == PackageManager.PERMISSION_GRANTED) {
-            this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allPhotos()))
-            this.onResult = null
+            success()
         } else {
             permission.launch(key)
         }
+    }
+
+    private fun error(){
+        onResult?.invoke(
+            Result(
+                ResultError.STORAGE_PERMISSION,
+                "storage permission denied",
+                emptyList()
+            )
+        )
+        onResult = null
+    }
+
+    private fun success(){
+        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allPhotos()))
+        this.onResult = null
     }
 
     private fun allPhotos(): List<Photo> {

@@ -21,16 +21,10 @@ class MessageUtil(val activity: ComponentActivity) {
     private val permission =
         activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
-                onResult?.invoke(Result(ResultError.RESULT_OK, null, allMessages()))
+                success()
             } else {
-                onResult?.invoke(
-                    Result(
-                        ResultError.MESSAGE_PERMISSION, "sms permission denied",
-                        emptyList()
-                    )
-                )
+                error()
             }
-            onResult = null
         }
 
     fun getMessages(
@@ -49,12 +43,25 @@ class MessageUtil(val activity: ComponentActivity) {
                 key
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allMessages()))
-            this.onResult = null
-
+          success()
         } else {
             permission.launch(key)
         }
+    }
+
+    private fun error(){
+        onResult?.invoke(
+            Result(
+                ResultError.MESSAGE_PERMISSION, "sms permission denied",
+                emptyList()
+            )
+        )
+        onResult = null
+    }
+
+    private fun success() {
+        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allMessages()))
+        this.onResult = null
     }
 
     private fun allMessages(): List<Message> {

@@ -19,17 +19,10 @@ class CallLogUtil(val activity: ComponentActivity) {
     val permission =
         activity.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
-                onResult?.invoke(Result(ResultError.RESULT_OK, null, allCallLogs()))
+                success()
             } else {
-                onResult?.invoke(
-                    Result(
-                        ResultError.CALL_LOG_PERMISSION,
-                        "call log permission denied",
-                        allCallLogs
-                    )
-                )
+                error()
             }
-            onResult = null
         }
 
     fun getCallLogs(timestamp: Long, onResult: (Result<List<CallLogInfo>>) -> Unit) {
@@ -37,11 +30,26 @@ class CallLogUtil(val activity: ComponentActivity) {
         this.timestamp = timestamp
         val key = Manifest.permission.READ_CALL_LOG
         if (ContextCompat.checkSelfPermission(activity, key) == PackageManager.PERMISSION_GRANTED) {
-            this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allCallLogs()))
-            this.onResult = null
+            success()
         } else {
             permission.launch(key)
         }
+    }
+
+    private fun error() {
+        onResult?.invoke(
+            Result(
+                ResultError.CALL_LOG_PERMISSION,
+                "call log permission denied",
+                allCallLogs
+            )
+        )
+        onResult = null
+    }
+
+    private fun success() {
+        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, allCallLogs()))
+        this.onResult = null
     }
 
 
