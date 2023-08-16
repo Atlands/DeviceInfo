@@ -1,7 +1,6 @@
 package com.qc.device.utils
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
@@ -28,7 +27,7 @@ class PositionUtil(val activity: ComponentActivity) {
             if (it[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
                 _getPosition()
             } else {
-                error()
+                error(ResultError.LOCATION_PERMISSION, "gps permission denied")
             }
         }
 
@@ -50,6 +49,10 @@ class PositionUtil(val activity: ComponentActivity) {
     }
 
     private fun _getPosition() {
+        if (!manager.isProviderEnabled(Manifest.permission.ACCESS_FINE_LOCATION)) {
+            error(ResultError.GPS_ENABLED, "GPS service not enabled")
+            return
+        }
         position(Manifest.permission.ACCESS_FINE_LOCATION, LocationManager.GPS_PROVIDER)
         if (this.onResult != null) {
             position(Manifest.permission.ACCESS_COARSE_LOCATION, LocationManager.NETWORK_PROVIDER)
@@ -63,12 +66,12 @@ class PositionUtil(val activity: ComponentActivity) {
         this.onResult = null
     }
 
-    private fun error() {
+    private fun error(code: Int, message: String) {
         if (onResult == null) return
         onResult?.invoke(
             Result(
-                ResultError.LOCATION_PERMISSION,
-                "gps permission denied",
+                code,
+                message,
                 null
             )
         )

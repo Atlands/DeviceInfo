@@ -16,6 +16,7 @@ object  ResultError{
     const val MESSAGE_PERMISSION = 100005
     const val CALENDAR_PERMISSION = 100006
     const val LOCATION_PERMISSION = 100007
+    const val GPS_ENABLED = 100010
     const val CALL_LOG_PERMISSION = 100008
     const val REFERRER_ERROR = 100009
 }
