@@ -3,6 +3,15 @@
 //keys = [app, call, photo, sms, calendar, contact]
 //有更新时间用更新时间，否则用创建时间，否则用id
 //注意日程的时间是 日程开始和结束时间，不是 创建时间，应该用id
+//注意取列表的最后一项
+{
+    "calendar": 10001, // id
+    "call": 1692242287, // time
+    "contact": 1692242287, //last_time
+    "sms": 1692242287, // time,
+    "photo": 1692242287, // updateTime,
+    "app": 1692242287, // createdAt
+}
 fun savePreferences(maps: Map<String, Any>)
 
 

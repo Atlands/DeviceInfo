@@ -25,6 +25,7 @@ import com.qc.device.utils.PhotoUtil
 import com.qc.device.utils.PositionUtil
 import com.qc.device.utils.ReferrerUtil
 import com.qc.device.utils.dateFormat
+import com.qc.device.utils.toDate
 import java.util.UUID
 
 object PreferencesKey {
@@ -68,23 +69,30 @@ class DataCenter(activity: ComponentActivity) {
                         putLong(PreferencesKey.App_Timestamp, item.value as Long)
 
                     "call" ->
-                        putLong(PreferencesKey.Call_Timestamp, item.value as Long)
+                        putLong(PreferencesKey.Call_Timestamp, valueToLong(item.value))
 
                     "photo" ->
-                        putLong(PreferencesKey.Photo_Timestamp, item.value as Long)
+                        putLong(PreferencesKey.Photo_Timestamp, valueToLong(item.value))
 
                     "sms" ->
-                        putLong(PreferencesKey.Sms_Timestamp, item.value as Long)
+                        putLong(PreferencesKey.Sms_Timestamp, valueToLong(item.value))
 
                     "calendar" ->
-                        putLong(PreferencesKey.Calendar_ID, item.value as Long)
+                        putLong(PreferencesKey.Calendar_ID, valueToLong(item.value))
 
                     "contact" ->
-                        putLong(PreferencesKey.Contact_Timestamp, item.value as Long)
+                        putLong(PreferencesKey.Contact_Timestamp, valueToLong(item.value))
                 }
             }
         }
     }
+
+    private fun valueToLong(value: Any): Long = if (value is Long) {
+        value
+    } else {
+        (value as String).toDate().time
+    }
+
 
     fun getContacts(onResult: (Result<List<Contact>>) -> Unit) {
         contactUtil.getContacts { result ->
