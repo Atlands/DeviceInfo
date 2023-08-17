@@ -49,10 +49,11 @@ class PositionUtil(val activity: ComponentActivity) {
     }
 
     private fun _getPosition() {
-        if (!manager.isProviderEnabled(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            error(ResultError.GPS_ENABLED, "GPS service not enabled")
-            return
-        }
+//        val isOpen = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+//        if (!isOpen) {
+//            error(ResultError.GPS_ENABLED, "GPS service not enabled")
+//            return
+//        }
         position(Manifest.permission.ACCESS_FINE_LOCATION, LocationManager.GPS_PROVIDER)
         if (this.onResult != null) {
             position(Manifest.permission.ACCESS_COARSE_LOCATION, LocationManager.NETWORK_PROVIDER)
@@ -85,7 +86,6 @@ class PositionUtil(val activity: ComponentActivity) {
                 key
             ) != PackageManager.PERMISSION_GRANTED
         ) return
-        if (!manager.isProviderEnabled(provider)) return
 
         if (mLocation != null) {
             geocoder(mLocation!!)

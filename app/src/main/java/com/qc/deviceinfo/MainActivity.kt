@@ -53,8 +53,8 @@ class MainActivity : ComponentActivity() {
                             Log.d(TAG, apps)
                         }
 
-                        TextButton("获取设备信息") {
-                            dataCenter.getDevice {
+                        TextButton("获取位置信息") {
+                            dataCenter.getPosition {
                                 Log.d(TAG, "onCreate: $it")
                             }
                         }
