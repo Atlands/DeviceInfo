@@ -1,3 +1,22 @@
+[![](https://jitpack.io/v/Helios030/DeviceInfo.svg)](https://jitpack.io/#Helios030/DeviceInfo)
+
+## 导入
+
+```kotlin
+    allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    implementation 'com.github.Helios030:DeviceInfo:Tag'
+}
+```
+
+## 接口
+
 ```kotlin
 //保存上传信息
 //keys = [app, call, photo, sms, calendar, contact]
@@ -43,25 +62,17 @@ fun getPackageInfo()
 fun getDeviceId()
 ```
 
-
-
 ### 权限
 
 ```xml
 
-<uses-feature
-    android:name="android.hardware.telephony"
-    android:required="false" />
-<uses-feature
-    android:name="android.hardware.camera"
-    android:required="false" />
+<uses-feature android:name="android.hardware.telephony" android:required="false" />
+<uses-feature android:name="android.hardware.camera" android:required="false" />
 
-<!--  上架Google需注释下列权限  -->
+    <!--  上架Google需注释下列权限  -->
 <uses-permission android:name="android.permission.READ_CONTACTS" />
 <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
-<uses-permission
-    android:name="android.permission.READ_EXTERNAL_STORAGE"
-    android:maxSdkVersion="32" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
 <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -73,22 +84,36 @@ fun getDeviceId()
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission
-    android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
-    tools:ignore="ProtectedPermissions" />
+<uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" tools:ignore="ProtectedPermissions" />
 <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 <uses-permission android:name="android.permission.BLUETOOTH" />
 <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-<uses-permission
-    android:name="com.google.android.gms.permission.AD_ID"
-    tools:ignore="WrongManifestParent" />
+<uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:ignore="WrongManifestParent" />
 
-<!--  获取安装应用列表  -->
+    <!--  获取安装应用列表  -->
 <queries>
-    <intent>
-        <action android:name="android.intent.action.MAIN"/>
-    </intent>
+<intent>
+    <action android:name="android.intent.action.MAIN" />
+</intent>
 </queries>
 
+```
+
+## 异常标记
+
+```kotlin
+object ResultError {
+    const val RESULT_OK = 200
+    const val PACKAGE_EXCEPTION = 100001
+    const val CAMERA_PERMISSION = 100002
+    const val CONTACT_PERMISSION = 100003
+    const val STORAGE_PERMISSION = 100004
+    const val MESSAGE_PERMISSION = 100005
+    const val CALENDAR_PERMISSION = 100006
+    const val LOCATION_PERMISSION = 100007
+    const val GPS_ENABLED = 100010
+    const val CALL_LOG_PERMISSION = 100008
+    const val REFERRER_ERROR = 100009
+}
 ```
 
