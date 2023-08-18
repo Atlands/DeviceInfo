@@ -7,6 +7,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -128,10 +129,24 @@ class PositionUtil(val activity: ComponentActivity) {
     }
 
 
-    private val locationListener = LocationListener { location ->
-        try {
-            mLocation = location
-        } catch (_: Exception) {
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            try {
+                mLocation = location
+            } catch (_: Exception) {
+            }
         }
+
+        override fun onLocationChanged(locations: MutableList<Location>) {}
+
+        override fun onFlushComplete(requestCode: Int) {}
+
+        @Deprecated("Deprecated in Java")
+        override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+        }
+
+        override fun onProviderEnabled(provider: String) {}
+
+        override fun onProviderDisabled(provider: String) {}
     }
 }
