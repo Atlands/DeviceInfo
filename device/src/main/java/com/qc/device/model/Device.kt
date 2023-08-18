@@ -1,5 +1,8 @@
 package com.qc.device.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class Device(
     /**
      * 电池

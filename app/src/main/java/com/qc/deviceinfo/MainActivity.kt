@@ -2,6 +2,7 @@ package com.qc.deviceinfo
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
@@ -66,17 +67,18 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        TextButton("获取设备信息") {
-                            dataCenter.getDevice {
-                                Log.d(TAG, "onCreate: $it")
-                            }
+                        TextButton("获取包信息") {
+                            var pack = dataCenter.getPackageInfo()
+                            Toast.makeText(baseContext, gson.toJson(pack), Toast.LENGTH_LONG).show()
                         }
 
 
-                        TextButton("获取设备信息") {
-                            dataCenter.getDevice {
-                                Log.d(TAG, "onCreate: $it")
-                            }
+                        TextButton("保存上传状态") {
+                            val ar = """{"sms":"2019-06-14 13:39:08"}"""
+
+                            val map =
+                                Gson().fromJson<Map<String, Any>>(ar, Map::class.java)
+                            dataCenter.savePreferences(map)
                         }
 
                     }
