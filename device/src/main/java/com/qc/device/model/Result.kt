@@ -1,13 +1,16 @@
 package com.qc.device.model
 
+import androidx.annotation.Keep
+
+@Keep
 data class Result<T>(
     val code: Int,
     val message: String? = null,
     val data: T,
 )
 
-
-object  ResultError{
+@Keep
+object ResultError {
     const val RESULT_OK = 200
     const val PACKAGE_EXCEPTION = 100001
     const val CAMERA_PERMISSION = 100002
