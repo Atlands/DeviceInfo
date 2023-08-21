@@ -87,6 +87,17 @@ class DataCenter(activity: ComponentActivity) {
         }
     }
 
+    fun cleanPreferences() {
+        preferences.edit {
+            remove(PreferencesKey.App_Timestamp)
+            remove(PreferencesKey.Call_Timestamp)
+            remove(PreferencesKey.Photo_Timestamp)
+            remove(PreferencesKey.Sms_Timestamp)
+            remove(PreferencesKey.Calendar_ID)
+            remove(PreferencesKey.Contact_Timestamp)
+        }
+    }
+
     private fun valueToLong(value: Any): Long = if (value is Long) {
         value
     } else {

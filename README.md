@@ -33,6 +33,8 @@ dependencies {
 }
 fun savePreferences(maps: Map<String, Any>)
 
+fun cleanPreferences()
+
 
 //联系人列表
 fun getContacts(onResult: (Result<List<Contact>>) -> Unit)
