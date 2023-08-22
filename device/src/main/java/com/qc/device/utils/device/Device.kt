@@ -232,43 +232,45 @@ private fun getGoogleId(context: Context): String =
         ""
     }
 
-private fun Context.getUserDefinedDeviceName(): String = try {
-    val f1 = {
-        Settings.System.getString(contentResolver, "bluetooth_name")
-    }
-    val f2 = {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
-            Settings.Secure.getString(contentResolver, "bluetooth_name")
-        } else {
-            ""
+private fun Context.getUserDefinedDeviceName(): String {
+    try {
+        Settings.System.getString(contentResolver, "bluetooth_name").let {
+            if (it.isNotBlank()) return it
         }
+    } catch (_: Exception) {
+    }
+    try {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
+            Settings.Secure.getString(contentResolver, "bluetooth_name").let {
+                if (it.isNotBlank()) return it
+            }
+        }
+    } catch (_: Exception) {
     }
 
-    val f3 = {
+    try {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
-            null
-        } else {
-            BluetoothAdapter.getDefaultAdapter().name
+            return BluetoothAdapter.getDefaultAdapter().name
         }
+    } catch (_: Exception) {
     }
-    val f4 = {
-        Settings.System.getString(contentResolver, "device_name")
+    try {
+        Settings.System.getString(contentResolver, "device_name").let {
+            if (it.isNotBlank()) return it
+        }
+    } catch (_: Exception) {
     }
 
-    val f5 = {
-        Settings.Secure.getString(contentResolver, "lock_screen_owner_info")
+    try {
+        Settings.Secure.getString(contentResolver, "lock_screen_owner_info").let {
+            if (it.isNotBlank()) return it
+        }
+    } catch (_: Exception) {
     }
 
-    //按以下顺序依次尝试获取，因为不存在统一的获取方法，不保证能成功获取。这个顺序在多数设备上大概率能成功。
-    listOf(f2, f3, f1, f4, f5)
-        .map { it.invoke() }
-        .firstOrNull {
-            it != null && it.isNotEmpty()
-        } ?: ""
-} catch (_: Exception) {
-    ""
+    return ""
 }
