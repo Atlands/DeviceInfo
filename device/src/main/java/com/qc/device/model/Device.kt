@@ -89,6 +89,7 @@ data class Device(
     /**
      * 电池
      */
+    @Keep
     data class Batter(
         val existed: Boolean = true,
         /**
@@ -158,6 +159,7 @@ data class Device(
     /**
      * CPU
      */
+    @Keep
     data class CPU(
         /**
          * 设备指令集名称
@@ -198,6 +200,7 @@ data class Device(
     /**
      * 设备信息
      */
+    @Keep
     data class DeviceInfo(
         /**
          * android ID
@@ -384,6 +387,7 @@ data class Device(
     /**
      * 需要存储权限
      */
+    @Keep
     data class File(
         val audioExternal: Int = 0,
         val audioInternal: Int = 0,
@@ -404,6 +408,7 @@ data class Device(
     /**
      * 本地化信息
      */
+    @Keep
     data class Locale(
         val country: String = "",
         val displayCountry: String = "",
@@ -436,6 +441,7 @@ data class Device(
         val timeZoneId: String = "",
     )
 
+    @Keep
     data class Network(
         /**
          * http代理host:port
@@ -476,6 +482,7 @@ data class Device(
      * 注册的Wi-Fi列表，configuredNetworks
      * 需要精确GPS定位
      */
+    @Keep
     data class WifiInfo(
         /**
          * 接入点的地址
@@ -515,6 +522,7 @@ data class Device(
     /**
      * 屏幕相关
      */
+    @Keep
     data class Screen(
         /**
          * 屏幕亮度，0-255
@@ -557,6 +565,7 @@ data class Device(
 
         )
 
+    @Keep
     data class SensorInfo(
         /**
          * 传感器单元中传感器的最大范围，"39.2266"
@@ -599,6 +608,7 @@ data class Device(
         val version: Int = 0
     )
 
+    @Keep
     data class Sim(
         /**
          * 网络运营商名称
@@ -670,6 +680,7 @@ data class Device(
     /**
      * 容量空间
      */
+    @Keep
     data class Space(
         /**
          * 给当前app分配的容量
@@ -692,6 +703,7 @@ data class Device(
         val storage: AppClass = AppClass(),
     )
 
+    @Keep
     data class AppClass(
         /**
          * 空闲，byte
