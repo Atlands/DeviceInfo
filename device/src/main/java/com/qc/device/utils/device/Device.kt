@@ -19,6 +19,7 @@ import android.provider.Settings
 import android.telephony.TelephonyManager
 import android.view.ViewConfiguration
 import androidx.core.app.ActivityCompat
+import androidx.core.database.getStringOrNull
 import androidx.core.location.LocationListenerCompat
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.qc.device.model.Device
@@ -161,7 +162,10 @@ fun DeviceUtil.getGSFID(): String? {
         ""
     } else {
         try {
-            java.lang.Long.toHexString(cursor.getString(1).toLong())
+            val string = cursor.getStringOrNull(1)
+            return string ?: ""
+//            java.lang.Long.toHexString(string.toLong())
+//            cursor.string("android_id")
         } catch (e: NumberFormatException) {
             e.printStackTrace()
             null
