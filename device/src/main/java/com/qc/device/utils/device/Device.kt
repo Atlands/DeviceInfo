@@ -24,13 +24,14 @@ import androidx.core.location.LocationListenerCompat
 import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.qc.device.model.Device
 import com.qc.device.utils.DeviceUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
-@SuppressLint("HardwareIds")
-fun DeviceUtil.getDeviceInfo(): Device.DeviceInfo {
+suspend fun DeviceUtil.getDeviceInfo(): Device.DeviceInfo {
     return Device.DeviceInfo(
         name = activity.getUserDefinedDeviceName(),//只获取设备名，可编辑的
         brand = Build.BRAND,
@@ -226,15 +227,16 @@ private fun isRoot(): Boolean {
     }
 }
 
-private fun getGoogleId(context: Context): String =
+private suspend fun getGoogleId(context: Context): String = withContext(Dispatchers.IO) {
     try {
         val adInfo: AdvertisingIdClient.Info =
             AdvertisingIdClient.getAdvertisingIdInfo(context)
         adInfo.id ?: ""
-    } catch (e: java.lang.Exception) {
+    } catch (e: Exception) {
         e.printStackTrace()
         ""
     }
+}
 
 private fun Context.getUserDefinedDeviceName(): String {
     try {

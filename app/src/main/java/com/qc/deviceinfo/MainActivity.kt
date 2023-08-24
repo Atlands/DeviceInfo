@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.qc.device.DataCenter
@@ -68,6 +69,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         TextButton("获取包信息") {
+                            lifecycleScope
                             var pack = dataCenter.getPackageInfo()
                             Toast.makeText(baseContext, gson.toJson(pack), Toast.LENGTH_LONG).show()
                         }

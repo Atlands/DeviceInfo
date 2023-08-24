@@ -1,7 +1,6 @@
 package com.qc.device.utils
 
 import android.Manifest
-import android.Manifest.permission.BLUETOOTH_CONNECT
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
@@ -12,6 +11,7 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.qc.device.model.Device
 import com.qc.device.model.Result
 import com.qc.device.model.ResultError
@@ -27,8 +27,9 @@ import com.qc.device.utils.device.getSimList
 import com.qc.device.utils.device.getSpace
 import com.qc.device.utils.device.getWifi
 import com.qc.device.utils.device.getWifiList
-import java.util.Date
 import com.qc.device.utils.device.isTabletDevice
+import kotlinx.coroutines.launch
+import java.util.Date
 
 class DeviceUtil(val activity: ComponentActivity) {
     private var device: Device? = null
@@ -43,7 +44,8 @@ class DeviceUtil(val activity: ComponentActivity) {
 
     init {
         openPower = getBatter().level
-        activity.application.registerActivityLifecycleCallbacks(object :ActivityLifecycleCallbacks{
+        activity.application.registerActivityLifecycleCallbacks(object :
+            ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 openPower = getBatter().level
             }
@@ -102,14 +104,16 @@ class DeviceUtil(val activity: ComponentActivity) {
         success()
     }
 
-    private fun success(){
-        this.onResult?.invoke(Result(ResultError.RESULT_OK, null, device().apply {
-            backNum = this@DeviceUtil.backNum
-        }))
-        this.onResult = null
+    private fun success() {
+        activity.lifecycleScope.launch {
+            this@DeviceUtil.onResult?.invoke(Result(ResultError.RESULT_OK, null, device().apply {
+                backNum = this@DeviceUtil.backNum
+            }))
+            this@DeviceUtil.onResult = null
+        }
     }
 
-    private fun device(): Device {
+    private suspend fun device(): Device {
         if (device != null) return device!!
         val simList = getSimList()
         device = Device(
