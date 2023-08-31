@@ -75,6 +75,7 @@ class DeviceUtil(val activity: ComponentActivity) {
     fun getDevice(onResult: (Result<Device>) -> Unit) {
         this.onResult = onResult
         val keys = mutableListOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.READ_PHONE_STATE,
