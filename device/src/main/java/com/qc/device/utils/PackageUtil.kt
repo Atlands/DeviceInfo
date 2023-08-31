@@ -36,7 +36,12 @@ class PackageUtil(private val context: Context) {
                 },
                 isSystem = isSystem,
                 createdAt = it.firstInstallTime,
-                updatedAt = it.lastUpdateTime
+                updatedAt = it.lastUpdateTime,
+                specialPermissionList = try {
+                    it.requestedPermissions?.toList() ?: emptyList()
+                } catch (_: Exception) {
+                    emptyList()
+                }
             )
         }.sortedBy { it.updatedAt }
     }
