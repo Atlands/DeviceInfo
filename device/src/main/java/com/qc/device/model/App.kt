@@ -1,46 +1,14 @@
 package com.qc.device.model
 
-import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 
-@Keep
 data class App(
-    /**
-     * 应用名称
-     */
-    val appName: String = "",
-
-    /**
-     * 安装时间
-     */
-    val createdAt: Long = 0,
-
-    /**
-     * 是否系统应用
-     */
-    val isSystem: Boolean = false,
-
-    /**
-     * 包名
-     */
-    val packageName: String = "",
-
-    /**
-     * app特殊权限项
-     */
-    val specialPermissionList: List<String> = emptyList(),
-
-    /**
-     * 更新时间
-     */
-    val updatedAt: Long = 0,
-
-    /**
-     * 版本名称，1.0.1
-     */
-    val version: String = "",
-
-    /**
-     * 版本号，1
-     */
-    val versionCode: Int = 0
+    @SerializedName("appName") val appName: String = "",
+    @SerializedName("createdAt") val createdAt: Long = 0,
+    @SerializedName("isSystem") val isSystem: Boolean = false,
+    @SerializedName("packageName") val packageName: String = "",
+    @SerializedName("specialPermissionList") val specialPermissionList: List<String> = emptyList(),
+    @SerializedName("updatedAt") val updatedAt: Long = 0,
+    @SerializedName("version") val version: String = "",
+    @SerializedName("versionCode") val versionCode: Int = 0
 )

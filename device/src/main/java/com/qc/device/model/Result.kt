@@ -1,15 +1,13 @@
 package com.qc.device.model
 
-import androidx.annotation.Keep
+import com.google.gson.annotations.SerializedName
 
-@Keep
 data class Result<T>(
-    val code: Int,
-    val message: String? = null,
-    val data: T,
+    @SerializedName("code") val code: Int,
+    @SerializedName("message") val message: String? = null,
+    @SerializedName("data") val data: T,
 )
 
-@Keep
 object ResultError {
     const val RESULT_OK = 200
     const val PACKAGE_EXCEPTION = 100001
