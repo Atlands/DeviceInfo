@@ -81,7 +81,7 @@ class MessageUtil(val activity: ComponentActivity) {
             properties.toTypedArray(),
             "${Telephony.Sms.DATE} > $startTimestamp",
             null,
-            "date desc"
+            "date asc"
         ) ?: return allMessages
 
         while (cursor.moveToNext()){
