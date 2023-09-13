@@ -6,16 +6,21 @@ import com.qc.device.utils.DeviceUtil
 import java.io.File
 
 fun DeviceUtil.getCPU(): Device.CPU {
+    val cpuFile = File("/proc/cpuinfo")
     val cpuName: String? =
-        File("/proc/cpuinfo").readLines().find { it.startsWith("Hardware") }?.substringAfter(":")
-            ?.trim()
+        if (cpuFile.exists()) cpuFile.readLines().find { it.startsWith("Hardware") }
+            ?.substringAfter(":")
+            ?.trim() else null
+    val coreFile = File("/sys/devices/system/cpu/")
     val cores: Int =
-        File("/sys/devices/system/cpu/").listFiles { file -> file.name.matches(Regex("cpu\\d+")) }?.size
-            ?: 1
+        if (coreFile.exists()) coreFile.listFiles { file -> file.name.matches(Regex("cpu\\d+")) }?.size
+            ?: 1 else 1
+    val minFile = File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq")
     val frequencyMin: Long? =
-        File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq").readText().toLongOrNull()
+        if (minFile.exists()) minFile.readText().toLongOrNull() else null
+    val maxFile = File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq")
     val frequencyMax: Long? =
-        File("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq").readText().toLongOrNull()
+        if (maxFile.exists()) maxFile.readText().toLongOrNull() else null
 //    val architecture: String? =
 //        File("/proc/cpuinfo").readLines().find { it.startsWith("Processor") }?.substringAfter(":")
 //            ?.trim()
