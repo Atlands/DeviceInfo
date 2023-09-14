@@ -60,6 +60,11 @@ class MainActivity : ComponentActivity() {
                                 Log.d(TAG, "onCreate: $it")
                             }
                         }
+                        TextButton("获取短信") {
+                            dataCenter.getMessages {
+                                Log.d(TAG, "onCreate: $it")
+                            }
+                        }
 
                         TextButton("获取设备信息") {
                             dataCenter.getDevice {
