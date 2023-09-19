@@ -9,12 +9,14 @@ import android.os.Build
 import android.os.Environment
 import android.provider.ContactsContract
 import android.provider.MediaStore
+import android.util.DisplayMetrics
+import android.view.WindowManager
 import androidx.core.content.ContextCompat
-import com.qc.device.R
 import com.qc.device.model.Device
 import com.qc.device.utils.DeviceUtil
 import com.qc.device.utils.string
 import java.io.File
+import kotlin.math.sqrt
 
 
 fun DeviceUtil.getFiles(): Device.File {
@@ -31,9 +33,21 @@ fun DeviceUtil.getFiles(): Device.File {
     )
 }
 
-fun DeviceUtil.isTabletDevice(): Boolean {
-    return this.activity.resources.getBoolean(R.bool.is_tablet_device)
+
+fun DeviceUtil.isTabletDevice(): Boolean = try {
+    val wm = activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val display = wm.defaultDisplay
+    val dm = DisplayMetrics()
+    display.getMetrics(dm)
+    val x = Math.pow((dm.widthPixels / dm.xdpi).toDouble(), 2.0)
+    val y = Math.pow((dm.heightPixels / dm.ydpi).toDouble(), 2.0)
+    val screenInches = sqrt(x + y) // 屏幕尺寸
+    screenInches >= 7.0
+} catch (e: Exception) {
+    e.printStackTrace()
+    false
 }
+
 
 private fun getContactGroup(context: Context): Int {
     val key = Manifest.permission.READ_CONTACTS
