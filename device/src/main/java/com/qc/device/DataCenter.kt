@@ -135,7 +135,7 @@ class DataCenter(activity: ComponentActivity) {
         }
     }
 
-    fun getApps(): List<App> {
+    suspend fun getApps(): List<App> {
         val timestamp = preferences.getLong(PreferencesKey.App_Timestamp, 0)
         return packageUtil.allPackages(timestamp)
     }

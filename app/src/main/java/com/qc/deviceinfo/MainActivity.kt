@@ -23,6 +23,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.qc.device.DataCenter
 import com.qc.deviceinfo.ui.theme.DeviceInfoTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
@@ -51,8 +53,10 @@ class MainActivity : ComponentActivity() {
 
 
                         TextButton("获取安装应用列表") {
-                            val apps = Gson().toJson(dataCenter.getApps())
-                            Log.d(TAG, apps)
+                            lifecycleScope.launch(Dispatchers.Main) {
+                                val apps = Gson().toJson(dataCenter.getApps())
+                                Log.d(TAG, apps)
+                            }
                         }
 
                         TextButton("获取位置信息") {

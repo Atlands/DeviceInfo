@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import com.qc.device.model.App
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class PackageUtil(private val context: Context) {
     /**
      * 查询已安装应用列表
      */
-    fun allPackages(timestamp: Long): List<App> {
+    suspend fun allPackages(timestamp: Long): List<App> = withContext(Dispatchers.IO) {
         val manager = context.packageManager
         val packages = try {
             manager.getInstalledPackages(0)
@@ -17,7 +19,7 @@ class PackageUtil(private val context: Context) {
             emptyList<PackageInfo>()
         }
 
-        return packages.filter {
+        packages.filter {
             it.lastUpdateTime > timestamp
         }.map {
             val isSystem = (it.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) == 1
@@ -35,8 +37,8 @@ class PackageUtil(private val context: Context) {
                     0
                 },
                 isSystem = isSystem,
-                createdAt = it.firstInstallTime,
-                updatedAt = it.lastUpdateTime,
+                createdAt = it.firstInstallTime ?: 0,
+                updatedAt = it.lastUpdateTime ?: 0,
                 specialPermissionList = try {
                     it.requestedPermissions?.toList() ?: emptyList()
                 } catch (_: Exception) {
