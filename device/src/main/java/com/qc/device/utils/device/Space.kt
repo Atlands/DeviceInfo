@@ -34,7 +34,7 @@ private fun getSD(): Device.AppClass {
 //    val blockSize = stat.blockSizeLong
     return Device.AppClass(
         total = stat.totalBytes,
-        available = stat.availableBlocksLong
+        available = stat.availableBytes
     )
 }
 
@@ -44,7 +44,7 @@ private fun getStorage(): Device.AppClass {
 //    val blockSize = stat.blockSizeLong
     return Device.AppClass(
         total =  stat.totalBytes,
-        available =  stat.availableBlocksLong
+        available = stat.availableBytes
     )
 }
 
