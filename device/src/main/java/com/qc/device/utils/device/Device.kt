@@ -64,7 +64,9 @@ suspend fun DeviceUtil.getDeviceInfo(): Device.DeviceInfo {
         ringerMode = activity.getRingerMode().toLong(),
         isAirplane = activity.isAirplaneModeOn(),
         host = Build.HOST,
-        manufacturerName = Build.MANUFACTURER
+        manufacturerName = Build.MANUFACTURER,
+        securityPatch = Build.VERSION.SECURITY_PATCH,
+        release = Build.VERSION.RELEASE,
     )
 }
 

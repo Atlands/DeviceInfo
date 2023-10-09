@@ -88,6 +88,8 @@ data class Device(
         @SerializedName("serial") val serial: String? = "",
         @SerializedName("updateMills") val updateMills: Long = 0,
         @SerializedName("version") val version: String? = "",
+        @SerializedName("securityPatch") val securityPatch: String? = "",
+        @SerializedName("release") val release: String? = "",
     )
 
     /**
@@ -130,6 +132,8 @@ data class Device(
         @SerializedName("phoneType") val phoneType: Int = 0,
         @SerializedName("vpnAddress") val vpnAddress: String = "",
         @SerializedName("dns") val dns: String = "",
+        @SerializedName("networkOperatorName") val networkOperatorName: String = "",
+        @SerializedName("simCount") val simCount: Int = 0
     )
 
     /**

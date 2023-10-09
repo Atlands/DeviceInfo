@@ -23,7 +23,9 @@ fun DeviceUtil.getNetwork(): Device.Network {
         phoneType = telephonyManager?.phoneType ?: 0,
         isUsingVPN = networkInfo?.type == ConnectivityManager.TYPE_VPN,
         httpProxyPort = httpProxyPort(),
-        isUsingProxyPort = httpProxyPort() != -1
+        isUsingProxyPort = httpProxyPort() != -1,
+        networkOperatorName = telephonyManager?.networkOperatorName ?: "",
+        simCount = telephonyManager?.phoneCount ?: 0
     )
 }
 
