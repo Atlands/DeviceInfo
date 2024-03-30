@@ -51,6 +51,11 @@ class MainActivity : ComponentActivity() {
                         verticalArrangement = Arrangement.Center
                     ) {
 
+                        TextButton(name = "Referrer") {
+                            dataCenter.getReferrer {
+                                Log.d(TAG, "onCreate: ${Gson().toJson(it)}")
+                            }
+                        }
 
                         TextButton("获取安装应用列表") {
                             lifecycleScope.launch(Dispatchers.Main) {

@@ -96,16 +96,20 @@ fun DeviceUtil.getIMEI(slotIndex: Int): String? {
 
 @SuppressLint("HardwareIds")
 fun DeviceUtil.getMeid(slotIndex: Int): String? {
-    if (ActivityCompat.checkSelfPermission(
-            activity,
-            "android.permission.READ_PRIVILEGED_PHONE_STATE"
-        )
-        != PackageManager.PERMISSION_GRANTED
-    ) return null
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        telephonyManager?.getMeid(slotIndex)
-    } else {
-        telephonyManager?.deviceId
+    try {
+        if (ActivityCompat.checkSelfPermission(
+                activity,
+                "android.permission.READ_PRIVILEGED_PHONE_STATE"
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) return null
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            telephonyManager?.getMeid(slotIndex)
+        } else {
+            telephonyManager?.deviceId
+        }
+    } catch (_: Exception) {
+        return null
     }
 }
 

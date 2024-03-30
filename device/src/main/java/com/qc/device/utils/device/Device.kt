@@ -139,16 +139,7 @@ fun Context.isAirplaneModeOn(): Boolean {
 
 fun Context.getRingerMode(): Int {
     val am = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-    if (am.ringerMode == AudioManager.RINGER_MODE_NORMAL) {
-        return AudioManager.RINGER_MODE_NORMAL
-    }
-    if (am.ringerMode == AudioManager.RINGER_MODE_VIBRATE) {
-        return AudioManager.RINGER_MODE_VIBRATE
-    }
-    if (am.ringerMode == AudioManager.RINGER_MODE_SILENT) {
-        return AudioManager.RINGER_MODE_SILENT
-    }
-    return -1
+    return am.ringerMode
 }
 
 fun getSystemVersion(): String {
