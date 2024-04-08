@@ -44,14 +44,15 @@ fun DeviceUtil.getWifiList(registered: Boolean): List<Device.WifiInfo> {
     val manager =
         activity.applicationContext.getSystemService(Context.WIFI_SERVICE) as? WifiManager
             ?: return emptyList()
-    return if (registered) manager.configuredNetworks.map {
-        Device.WifiInfo(
-            ssid = it.SSID ?: "",
-            bssid = it.BSSID ?: ""
-        )
-    }
-    else
-        manager.scanResults.map {
+    return if (registered) {
+        manager.configuredNetworks?.map {
+            Device.WifiInfo(
+                ssid = it.SSID ?: "",
+                bssid = it.BSSID ?: ""
+            )
+        } ?: emptyList()
+    } else {
+        manager.scanResults?.map {
             Device.WifiInfo(
                 ssid = it.BSSID ?: "",
                 bssid = it.BSSID ?: "",
@@ -60,7 +61,8 @@ fun DeviceUtil.getWifiList(registered: Boolean): List<Device.WifiInfo> {
                 frequency = it.frequency,
                 timestamp = it.timestamp
             )
-        }
+        } ?: emptyList()
+    }
 }
 //
 //private fun isWifiConnection(context: Context): Boolean {

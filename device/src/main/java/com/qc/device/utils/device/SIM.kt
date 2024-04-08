@@ -238,8 +238,12 @@ fun DeviceUtil.getCidNumbers(): String {
         ) {
             return ""
         }
-        val location = telephonyManager?.cellLocation as GsmCellLocation
-        return location.cid.toString()
+        return try {
+            val location = telephonyManager?.cellLocation as GsmCellLocation
+            location.cid.toString()
+        } catch (_: Exception) {
+            ""
+        }
     }
     return ""
 }
