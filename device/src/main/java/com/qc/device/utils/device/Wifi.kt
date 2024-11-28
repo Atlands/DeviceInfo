@@ -54,7 +54,7 @@ fun DeviceUtil.getWifiList(registered: Boolean): List<Device.WifiInfo> {
     } else {
         manager.scanResults?.map {
             Device.WifiInfo(
-                ssid = it.BSSID ?: "",
+                ssid = it.SSID ?: "",
                 bssid = it.BSSID ?: "",
                 capabilities = it.capabilities ?: "",
                 rssi = it.level,
