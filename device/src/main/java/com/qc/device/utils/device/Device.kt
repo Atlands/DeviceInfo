@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.location.Location
@@ -181,12 +180,12 @@ private fun isOpenUSBDebug(context: Context): Boolean = try {
  */
 @SuppressLint("HardwareIds")
 private fun isEmulator(context: Context): Boolean = try {
-    val url = "tel:" + "123456"
-    val intent = Intent()
-    intent.data = Uri.parse(url)
-    intent.action = Intent.ACTION_DIAL
+//    val url = "tel:" + "123456"
+//    val intent = Intent()
+//    intent.data = Uri.parse(url)
+//    intent.action = Intent.ACTION_DIAL
     // 是否可以处理跳转到拨号的 Intent
-    val canCallPhone = intent.resolveActivity(context.packageManager) != null
+//    val canCallPhone = intent.resolveActivity(context.packageManager) != null
     Build.FINGERPRINT.startsWith("generic") || Build.FINGERPRINT.lowercase()
         .contains("vbox") || Build.FINGERPRINT.lowercase()
         .contains("test-keys") || Build.MODEL.contains("google_sdk") || Build.MODEL.contains(
@@ -202,7 +201,8 @@ private fun isEmulator(context: Context): Boolean = try {
             == Build.PRODUCT) || ((context
         .getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager).networkOperatorName
         .lowercase()
-            == "android") || !canCallPhone
+            == "android")
+//            || !canCallPhone
 } catch (e: Exception) {
     e.printStackTrace()
     false

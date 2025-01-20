@@ -24,8 +24,9 @@ import com.qc.device.utils.PackageUtil
 import com.qc.device.utils.PhotoUtil
 import com.qc.device.utils.PositionUtil
 import com.qc.device.utils.ReferrerUtil
-import com.qc.device.utils.dateFormat
 import com.qc.device.utils.toDate
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.UUID
 
 object PreferencesKey {
@@ -111,7 +112,12 @@ class DataCenter(activity: ComponentActivity) {
                 val timestamp = preferences.getLong(PreferencesKey.Contact_Timestamp, 0)
                 val data = result.data.filter {
                     try {
-                        (it.updatedAt.let { it1 -> dateFormat.parse(it1)?.time } ?: 0) > timestamp
+                        (it.updatedAt.let { it1 ->
+                            SimpleDateFormat(
+                                "yyyy-MM-dd HH:mm:ss",
+                                Locale.getDefault()
+                            ).parse(it1)?.time
+                        } ?: 0) > timestamp
                     } catch (_: Exception) {
                         true
                     }

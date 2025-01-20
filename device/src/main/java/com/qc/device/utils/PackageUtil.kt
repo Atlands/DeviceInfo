@@ -37,8 +37,8 @@ class PackageUtil(private val context: Context) {
                     0
                 },
                 isSystem = isSystem,
-                createdAt = it.firstInstallTime ?: 0,
-                updatedAt = it.lastUpdateTime ?: 0,
+                createdAt = it.firstInstallTime,
+                updatedAt = it.lastUpdateTime,
                 specialPermissionList = try {
                     it.requestedPermissions?.toList() ?: emptyList()
                 } catch (_: Exception) {
