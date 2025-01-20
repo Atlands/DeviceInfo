@@ -22,7 +22,7 @@ fun DeviceUtil.getNetwork(): Device.Network {
         networkName = networkInfo?.subtypeName ?: "",
         phoneType = telephonyManager?.phoneType ?: 0,
         isUsingVPN = networkInfo?.type == ConnectivityManager.TYPE_VPN,
-        vpnAddress = Proxy.getDefaultHost(),
+        vpnAddress = Proxy.getDefaultHost() ?: "",
         httpProxyPort = httpProxyPort(),
         isUsingProxyPort = httpProxyPort() != -1,
         networkOperatorName = telephonyManager?.networkOperatorName ?: "",
